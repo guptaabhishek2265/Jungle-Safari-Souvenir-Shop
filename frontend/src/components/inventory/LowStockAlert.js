@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Paper,
   Typography,
@@ -21,42 +21,25 @@ import {
 import WarningIcon from "@mui/icons-material/Warning";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
-import axios from "axios";
 
-const LowStockAlert = ({ products, loading, onCreatePurchaseOrder }) => {
-  const [lowStockProducts, setLowStockProducts] = useState([]);
+const LowStockAlert = ({
+  products,
+  loading: productsLoading,
+  onCreatePurchaseOrder,
+}) => {
   const [error, setError] = useState(null);
   const [autoReorderDialog, setAutoReorderDialog] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [processingOrder, setProcessingOrder] = useState(false);
   const [autoReorderSuccess, setAutoReorderSuccess] = useState(false);
 
-  // Fetch low stock products
-  useEffect(() => {
-    const fetchLowStockProducts = async () => {
-      try {
-        setLoading(true);
-        const API_URL = "http://localhost:5000/api";
-        const response = await axios.get(
-          `${API_URL}/purchase-orders/low-stock/products`
-        );
-        setLowStockProducts(response.data);
-        setError(null);
-      } catch (err) {
-        console.error("Error fetching low stock products:", err);
-        setError("Failed to load low stock alerts. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLowStockProducts();
-  }, []);
+  // Use products directly from props
+  const isLoading = productsLoading;
 
   // Handle opening the auto-reorder dialog
   const handleOpenAutoReorder = () => {
     // By default, select all products for reordering
-    setSelectedProducts([...lowStockProducts]);
+    setSelectedProducts([...products]);
     setAutoReorderDialog(true);
   };
 
@@ -204,7 +187,7 @@ const LowStockAlert = ({ products, loading, onCreatePurchaseOrder }) => {
       ));
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Paper elevation={2} sx={{ p: 2, mb: 3 }}>
         <Box display="flex" alignItems="center" justifyContent="center" p={3}>
@@ -241,7 +224,7 @@ const LowStockAlert = ({ products, loading, onCreatePurchaseOrder }) => {
         </Typography>
       </Box>
 
-      {loading ? (
+      {isLoading ? (
         <List sx={{ py: 0 }}>{renderSkeletonItems()}</List>
       ) : products.length === 0 ? (
         <Box p={3} textAlign="center">
@@ -327,7 +310,7 @@ const LowStockAlert = ({ products, loading, onCreatePurchaseOrder }) => {
                 will be grouped by supplier.
               </Typography>
               <List>
-                {lowStockProducts.map((product) => (
+                {products.map((product) => (
                   <ListItem
                     key={product._id}
                     onClick={() => toggleProductSelection(product)}

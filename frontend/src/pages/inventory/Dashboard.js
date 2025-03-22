@@ -46,7 +46,6 @@ import RealTimeInventoryMonitor from "../../components/inventory/RealTimeInvento
 import DashboardLayout from "../../components/common/DashboardLayout";
 import SupplierManagement from "./SupplierManagement";
 import PurchaseOrderManagement from "./PurchaseOrderManagement";
-import ProductManagement from "./ProductManagement";
 import AutoReorderSettings from "../../components/inventory/AutoReorderSettings";
 
 // Create inventory context for real-time updates
@@ -208,11 +207,18 @@ export const InventoryProvider = ({ children }) => {
 
   // Function to check and create automatic reorders
   const checkAndCreateAutoReorders = (currentProducts) => {
-    const productsToReorder = currentProducts.filter(
-      (product) =>
-        product.stock <= product.reorderLevel &&
-        product.stock <= autoReorderThreshold
-    );
+    const productsToReorder = currentProducts.filter((product) => {
+      // If auto-reorder is enabled, use the autoReorderThreshold
+      // Otherwise, use the product's individual reorderLevel
+      if (autoReorderEnabled) {
+        return product.stock <= autoReorderThreshold;
+      } else {
+        return (
+          product.stock <= product.reorderLevel &&
+          product.stock <= autoReorderThreshold
+        );
+      }
+    });
 
     if (productsToReorder.length > 0) {
       // Create reorder notifications for each product
@@ -221,8 +227,15 @@ export const InventoryProvider = ({ children }) => {
         productId: product.id,
         productName: product.name,
         currentStock: product.stock,
-        reorderLevel: product.reorderLevel,
-        reorderQuantity: Math.max(product.reorderLevel - product.stock + 10, 5),
+        reorderLevel: autoReorderEnabled
+          ? autoReorderThreshold
+          : product.reorderLevel,
+        reorderQuantity: Math.max(
+          autoReorderEnabled
+            ? autoReorderThreshold - product.stock + 10
+            : product.reorderLevel - product.stock + 10,
+          5
+        ),
         timestamp: new Date().toISOString(),
         status: "pending",
       }));
@@ -318,11 +331,44 @@ export const InventoryProvider = ({ children }) => {
     if (enabled && products.length > 0) {
       checkAndCreateAutoReorders(products);
     }
+
+    // Force update of lowStockItems count in stats
+    if (products.length > 0) {
+      const lowStock = products.filter((p) => {
+        if (enabled) {
+          return p.stock <= autoReorderThreshold;
+        } else {
+          return p.stock <= p.reorderLevel;
+        }
+      });
+
+      setStats((prevStats) => ({
+        ...prevStats,
+        lowStockItems: lowStock.length,
+      }));
+    }
   };
 
   // Update auto-reorder threshold
   const updateAutoReorderThreshold = (threshold) => {
-    setAutoReorderThreshold(Math.max(1, threshold));
+    const newThreshold = Math.max(1, threshold);
+    setAutoReorderThreshold(newThreshold);
+
+    // Update lowStockItems count in stats
+    if (products.length > 0) {
+      const lowStock = products.filter((p) => {
+        if (autoReorderEnabled) {
+          return p.stock <= newThreshold;
+        } else {
+          return p.stock <= p.reorderLevel;
+        }
+      });
+
+      setStats((prevStats) => ({
+        ...prevStats,
+        lowStockItems: lowStock.length,
+      }));
+    }
   };
 
   // Clear a notification
@@ -408,7 +454,23 @@ export const InventoryProvider = ({ children }) => {
       "auto-reorder-threshold",
       autoReorderThreshold.toString()
     );
-  }, [autoReorderEnabled, autoReorderThreshold]);
+
+    // Recalculate low stock items based on new settings
+    if (products.length > 0) {
+      const lowStock = products.filter((p) => {
+        if (autoReorderEnabled) {
+          return p.stock <= autoReorderThreshold;
+        } else {
+          return p.stock <= p.reorderLevel;
+        }
+      });
+
+      setStats((prevStats) => ({
+        ...prevStats,
+        lowStockItems: lowStock.length,
+      }));
+    }
+  }, [autoReorderEnabled, autoReorderThreshold, products]);
 
   // Save notifications when changed
   useEffect(() => {
@@ -457,6 +519,7 @@ const InventoryManagerDashboard = () => {
     category: "",
     price: "",
     stock: "",
+    imageUrl: "",
   });
 
   // Categories - limited to 10 as requested
@@ -473,19 +536,66 @@ const InventoryManagerDashboard = () => {
     "Souvenirs",
   ];
 
+  // Update low stock products whenever inventory context changes
   useEffect(() => {
     if (inventoryContext && inventoryContext.products) {
-      const lowStock = inventoryContext.products.filter(
-        (p) => p.stock <= p.reorderLevel
-      );
+      // When autoReorderEnabled is true, consider products with stock <= autoReorderThreshold as low stock
+      // Otherwise, use the product's own reorderLevel
+      const lowStock = inventoryContext.products.filter((p) => {
+        if (inventoryContext.autoReorderEnabled) {
+          return p.stock <= inventoryContext.autoReorderThreshold;
+        } else {
+          return p.stock <= p.reorderLevel;
+        }
+      });
+
       setLowStockProducts(lowStock);
       setLoadingProducts(false);
       setLoadingStats(false);
     }
   }, [inventoryContext]);
 
+  // Update low stock products specifically when auto-reorder settings change
+  useEffect(() => {
+    if (inventoryContext && inventoryContext.products) {
+      console.log(
+        "Auto-reorder settings changed. Threshold:",
+        inventoryContext.autoReorderThreshold
+      );
+      console.log("Auto-reorder enabled:", inventoryContext.autoReorderEnabled);
+
+      const lowStock = inventoryContext.products.filter((p) => {
+        if (inventoryContext.autoReorderEnabled) {
+          return p.stock <= inventoryContext.autoReorderThreshold;
+        } else {
+          return p.stock <= p.reorderLevel;
+        }
+      });
+
+      console.log("Low stock products count:", lowStock.length);
+      setLowStockProducts(lowStock);
+    }
+  }, [
+    inventoryContext?.autoReorderEnabled,
+    inventoryContext?.autoReorderThreshold,
+    inventoryContext?.products,
+  ]);
+
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
+
+    // If switching to low stock tab, refresh the low stock products list
+    if (newValue === 1 && inventoryContext && inventoryContext.products) {
+      const lowStock = inventoryContext.products.filter((p) => {
+        if (inventoryContext.autoReorderEnabled) {
+          return p.stock <= inventoryContext.autoReorderThreshold;
+        } else {
+          return p.stock <= p.reorderLevel;
+        }
+      });
+
+      setLowStockProducts(lowStock);
+    }
   };
 
   // Handle opening the add product dialog
@@ -502,6 +612,7 @@ const InventoryManagerDashboard = () => {
       category: "",
       price: "",
       stock: "",
+      imageUrl: "",
     });
   };
 
@@ -517,6 +628,7 @@ const InventoryManagerDashboard = () => {
         parseInt(newProduct.stock) > parseInt(newProduct.stock) * 0.2
           ? "In Stock"
           : "Low Stock",
+      imageUrl: newProduct.imageUrl || "https://via.placeholder.com/150",
     };
 
     // Add the product using context
@@ -557,13 +669,6 @@ const InventoryManagerDashboard = () => {
   // Render content based on current view mode
   const renderContent = () => {
     switch (viewMode) {
-      case "products":
-        return (
-          <ProductManagement
-            products={inventoryContext.products || []}
-            onAddProduct={handleOpenAddProductDialog}
-          />
-        );
       case "suppliers":
         return <SupplierManagement />;
       case "purchaseOrders":
@@ -613,7 +718,7 @@ const InventoryManagerDashboard = () => {
                 >
                   <StatsCard
                     title="Low Stock Items"
-                    value={inventoryContext.stats?.lowStockItems || 0}
+                    value={lowStockProducts.length || 0}
                     icon={<WarningIcon fontSize="large" />}
                     loading={loadingStats}
                     color="#f44336"
@@ -734,7 +839,6 @@ const InventoryManagerDashboard = () => {
               >
                 <InventoryIcon sx={{ mr: 1, fontSize: 35 }} />
                 {viewMode === "dashboard" && "Inventory Dashboard"}
-                {viewMode === "products" && "Product Management"}
                 {viewMode === "suppliers" && "Supplier Management"}
                 {viewMode === "purchaseOrders" && "Purchase Orders"}
               </Typography>
@@ -775,22 +879,6 @@ const InventoryManagerDashboard = () => {
                   }}
                 >
                   Dashboard
-                </Button>
-                <Button
-                  variant={viewMode === "products" ? "contained" : "outlined"}
-                  startIcon={<InventoryIcon />}
-                  onClick={() => handleNavigateToView("products")}
-                  color="primary"
-                  sx={{
-                    m: 0.5,
-                    borderRadius: 2,
-                    boxShadow:
-                      viewMode === "products"
-                        ? "0 0 15px rgba(0, 200, 150, 0.5)"
-                        : "none",
-                  }}
-                >
-                  Products
                 </Button>
                 <Button
                   variant={viewMode === "suppliers" ? "contained" : "outlined"}
@@ -915,6 +1003,17 @@ const InventoryManagerDashboard = () => {
                       onChange={handleNewProductChange}
                       fullWidth
                       required
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="imageUrl"
+                      label="Image URL"
+                      value={newProduct.imageUrl}
+                      onChange={handleNewProductChange}
+                      fullWidth
+                      placeholder="https://example.com/image.jpg"
+                      helperText="Optional - Image that will be displayed in the customer dashboard"
                     />
                   </Grid>
                 </Grid>

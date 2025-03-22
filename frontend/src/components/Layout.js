@@ -109,11 +109,6 @@ const Layout = () => {
           path: "/inventory",
         },
         {
-          text: "Product Management",
-          icon: <InventoryIcon />,
-          path: "/inventory/products",
-        },
-        {
           text: "Supplier Management",
           icon: <BusinessIcon />,
           path: "/inventory/suppliers",

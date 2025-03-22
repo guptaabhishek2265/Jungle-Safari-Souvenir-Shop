@@ -55,15 +55,6 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth = 240 }) => {
       roles: ["admin", "sales", "inventory_manager"],
     },
     {
-      text: "Products",
-      icon: <InventoryIcon />,
-      path:
-        user?.role === "inventory_manager" || user?.role === "admin"
-          ? "/inventory/products"
-          : "/products",
-      roles: ["admin", "inventory_manager", "sales"],
-    },
-    {
       text: "Sales",
       icon: <SalesIcon />,
       path: "/sales/reports",

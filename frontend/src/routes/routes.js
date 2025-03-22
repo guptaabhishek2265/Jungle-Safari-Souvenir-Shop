@@ -85,11 +85,6 @@ const routes = [
         roles: ["inventory_manager", "admin"],
       },
       {
-        path: "inventory/products",
-        element: <ProductManagement />,
-        roles: ["inventory_manager", "admin"],
-      },
-      {
         path: "inventory/suppliers",
         element: <SupplierManagement />,
         roles: ["inventory_manager", "admin"],

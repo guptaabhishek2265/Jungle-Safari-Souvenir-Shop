@@ -122,7 +122,6 @@ const Layout = () => {
           icon: <InventoryIcon />,
           path: "/inventory/dashboard",
         },
-        { text: "Products", icon: <StoreIcon />, path: "/inventory/products" },
         {
           text: "Suppliers",
           icon: <BusinessIcon />,
@@ -176,7 +175,6 @@ const Layout = () => {
           icon: <DashboardIcon />,
           path: "/inventory/dashboard",
         },
-        { text: "Products", icon: <StoreIcon />, path: "/inventory/products" },
         {
           text: "Suppliers",
           icon: <BusinessIcon />,
