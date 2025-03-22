@@ -1,0 +1,451 @@
+/* Global Theme CSS for the entire application */
+
+/* Safari/Jungle Theme Colors */
+:root {
+  /* Primary colors - jungle greens */
+  --primary-color: #2e7d32; /* Dark green */
+  --primary-light: #66bb6a; /* Light green */
+  --primary-dark: #1b5e20; /* Forest green */
+
+  /* Secondary colors - earth and accent tones */
+  --secondary-color: #ff9800; /* Amber/Orange */
+  --secondary-light: #ffb74d; /* Light orange */
+  --secondary-dark: #ef6c00; /* Dark orange */
+  --accent-color: #8d6e63; /* Earthy brown */
+
+  /* Text colors */
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-tertiary: #b0bec5;
+  --text-disabled: rgba(255, 255, 255, 0.5);
+
+  /* Background colors - enhanced green/black mixture for better text visibility */
+  --background-default: #152815; /* Darker green with black mixture */
+  --background-dark: #0e1c0e; /* Deeper green with black mixture */
+  --background-light: #1b321b; /* Slightly lighter green with black mixture */
+  --background-paper: #1e331e; /* Paper background with green/black mixture */
+  --border-color: rgba(46, 125, 50, 0.3); /* Green with low opacity */
+  --card-background: #162c16; /* Card background with more green/black contrast */
+
+  /* Inventory manager panel specific */
+  --inventory-panel-bg: linear-gradient(
+    135deg,
+    #142814 0%,
+    #0a180a 100%
+  ); /* Green/black mixture gradient */
+
+  /* Status colors */
+  --success-color: #4caf50; /* Green */
+  --warning-color: #ff9800; /* Amber */
+  --error-color: #f44336; /* Red */
+
+  /* Shadow colors */
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  --glow-color: rgba(46, 125, 50, 0.3);
+
+  /* Input backgrounds */
+  --input-bg: rgba(
+    14,
+    32,
+    14,
+    0.7
+  ); /* Green/black mixture for input background */
+  --disabled-color: #546e7a;
+
+  /* Other UI Colors */
+  --divider-color: rgba(255, 255, 255, 0.1);
+  --hover-bg: rgba(46, 125, 50, 0.15);
+  --active-bg: rgba(46, 125, 50, 0.25);
+}
+
+/* Safari Theme Background */
+body {
+  background-color: var(--background-default);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.96 2.243 8.2 0H5.374zM48.97 0l3.657 3.657-1.414 1.414L46.143 0h2.828zM11.03 0L7.372 3.657 8.787 5.07 13.857 0H11.03zm32.284 0L49.8 6.485 48.384 7.9l-7.9-7.9h2.83zM16.686 0L10.2 6.485 11.616 7.9l7.9-7.9h-2.83zm20.97 0l9.315 9.314-1.414 1.414L34.828 0h2.83zM22.344 0L13.03 9.314l1.414 1.414L25.172 0h-2.83zM32 0l12.142 12.142-1.414 1.414L30 .828 17.272 13.556l-1.414-1.414L28 0h4zM.284 0l28 28-1.414 1.414L0 2.544v-2.26zM0 5.373l25.456 25.455-1.414 1.415L0 8.2V5.374zm0 5.656l22.627 22.627-1.414 1.414L0 13.86v-2.83zm0 5.657l19.8 19.8-1.415 1.413L0 19.514v-2.83zm0 5.657l16.97 16.97-1.414 1.415L0 25.172v-2.83zM0 28l14.142 14.142-1.414 1.414L0 30.828V28zm0 5.657L11.314 44.97 9.9 46.386l-9.9-9.9v-2.828zm0 5.657L8.485 47.8 7.07 49.212 0 42.143v-2.83zm0 5.657l5.657 5.657-1.414 1.415L0 47.8v-2.83zm0 5.657l2.828 2.83-1.414 1.413L0 53.456v-2.83zM54.627 60L30 35.373 5.373 60H8.2L30 38.2 51.8 60h2.827zm-5.656 0L30 41.03 11.03 60h2.828L30 43.858 46.142 60h2.83zm-5.656 0L30 46.686 16.686 60h2.83L30 49.515 40.485 60h2.83zm-5.657 0L30 52.343 22.344 60h2.83L30 55.172 34.828 60h2.83zM32 60l-2-2-2 2h4zM59.716 0l-28 28 1.414 1.414L60 2.544V.284zM60 5.373L34.544 30.828l1.414 1.415L60 8.2V5.374zm0 5.656L37.373 33.656l1.414 1.414L60 13.86v-2.83zm0 5.657l-19.8 19.8 1.415 1.413L60 19.514v-2.83zm0 5.657l-16.97 16.97 1.414 1.415L60 25.172v-2.83zM60 28L45.858 42.142l1.414 1.414L60 30.828V28zm0 5.657L48.686 44.97l1.415 1.415 9.9-9.9v-2.828zm0 5.657L51.515 47.8l1.414 1.413 7.07-7.07v-2.83zm0 5.657l-5.657 5.657 1.414 1.415L60 47.8v-2.83zm0 5.657l-2.828 2.83 1.414 1.413L60 53.456v-2.83zM39.9 16.385l1.414-1.414 1.414 1.414-1.414 1.414-1.414-1.414zm-2.83 2.83l1.415-1.414 1.414 1.414-1.414 1.414-1.414-1.414zM34.243 22.1l1.414-1.413 1.414 1.414-1.414 1.414-1.414-1.414zm-2.83 2.83l1.415-1.413 1.414 1.414-1.414 1.414-1.414-1.414zM29.515 27.83l1.414-1.416 1.414 1.417-1.414 1.414-1.414-1.414zm-2.83 2.83l1.414-1.416 1.415 1.417-1.414 1.414-1.414-1.414zM24.787 33.5l1.414-1.413 1.414 1.414-1.414 1.414-1.414-1.414zm-2.83 2.83l1.415-1.413 1.414 1.414-1.414 1.414-1.414-1.414zM20.06 39.23l1.414-1.413 1.414 1.414-1.414 1.414-1.414-1.414zm-2.83 2.83l1.414-1.415 1.414 1.415-1.414 1.414-1.414-1.414zM15.3 44.96l1.416-1.415 1.414 1.414-1.414 1.414-1.414-1.414zm-2.827 2.827l1.414-1.414 1.414 1.414-1.414 1.414-1.414-1.414z' fill='%232e7d32' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+  color: var(--text-primary);
+  font-family: "Poppins", sans-serif;
+}
+
+/* Custom Jungle Theme Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 34, 23, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+/* Safari Navigation Theme */
+.MuiDrawer-paper {
+  background-color: var(--background-dark) !important;
+  border-right: 1px solid var(--border-color) !important;
+}
+
+.MuiAppBar-root {
+  background-color: var(--background-dark) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Inventory Manager Panel Styling */
+.inventory-manager-panel {
+  background: var(--inventory-panel-bg) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+  border-bottom: 1px solid rgba(46, 125, 50, 0.4) !important;
+}
+
+/* Safari-themed Nav Items */
+.nav-item {
+  border-radius: 12px !important;
+  margin-bottom: 4px !important;
+  transition: all 0.3s ease !important;
+}
+
+.nav-item.active {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.nav-item:hover:not(.active) {
+  background-color: var(--hover-bg) !important;
+}
+
+.nav-icon {
+  color: var(--primary-color) !important;
+}
+
+.nav-item.active .nav-icon {
+  color: white !important;
+}
+
+/* Safari-themed Paper Components */
+.MuiPaper-root {
+  background-color: var(--card-background) !important;
+  color: var(--text-primary) !important;
+  transition: all 0.3s ease !important;
+}
+
+.MuiCard-root {
+  border-radius: 16px !important;
+  border: 1px solid var(--border-color) !important;
+  overflow: hidden !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.MuiCard-root:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Safari-themed Typography */
+.MuiTypography-root {
+  color: var(--text-primary) !important;
+}
+
+.MuiTypography-caption,
+.MuiTypography-subtitle2 {
+  color: var(--text-secondary) !important;
+}
+
+/* Safari-themed Inputs */
+.MuiOutlinedInput-root {
+  background-color: var(--input-bg) !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: var(--border-color) !important;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--primary-light) !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--primary-color) !important;
+  border-width: 2px !important;
+}
+
+.MuiInputLabel-root,
+.MuiInputBase-input {
+  color: var(--text-primary) !important;
+}
+
+.MuiInputLabel-root.Mui-focused {
+  color: var(--primary-light) !important;
+}
+
+/* Safari-themed Buttons */
+.MuiButton-contained {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  border-radius: 12px !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  padding: 8px 24px !important;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+.MuiButton-contained:hover {
+  background-color: var(--primary-dark) !important;
+  box-shadow: 0 6px 15px rgba(46, 125, 50, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+.MuiButton-outlined {
+  border-color: var(--primary-color) !important;
+  color: var(--primary-light) !important;
+  border-radius: 12px !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  padding: 8px 24px !important;
+  transition: all 0.2s ease !important;
+}
+
+.MuiButton-outlined:hover {
+  background-color: rgba(46, 125, 50, 0.08) !important;
+  border-color: var(--primary-light) !important;
+}
+
+.MuiButton-contained.safari-accent {
+  background-color: var(--secondary-color) !important;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3) !important;
+}
+
+.MuiButton-contained.safari-accent:hover {
+  background-color: var(--secondary-dark) !important;
+  box-shadow: 0 6px 15px rgba(255, 152, 0, 0.4) !important;
+}
+
+/* Safari-themed Table Styles */
+.MuiTable-root {
+  background-color: var(--card-background) !important;
+}
+
+.MuiTableHead-root {
+  background-color: rgba(46, 125, 50, 0.1) !important;
+}
+
+.MuiTableCell-root {
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.MuiTableRow-root:hover {
+  background-color: rgba(46, 125, 50, 0.08) !important;
+}
+
+/* Inventory specific table styling */
+.inventory-manager-panel ~ main .MuiTableHead-root {
+  background: linear-gradient(90deg, #142814 0%, #0a180a 100%) !important;
+}
+
+.inventory-manager-panel ~ main .MuiTableCell-head {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+}
+
+.inventory-manager-panel ~ main .MuiTableRow-root:hover {
+  background-color: rgba(46, 125, 50, 0.15) !important;
+}
+
+.inventory-manager-panel ~ main .MuiPaper-root {
+  background-color: rgba(21, 40, 21, 0.7) !important;
+  border: 1px solid rgba(46, 125, 50, 0.3) !important;
+}
+
+.MuiTablePagination-root {
+  color: var(--text-primary) !important;
+}
+
+.MuiTablePagination-select,
+.MuiTablePagination-selectIcon {
+  color: var(--text-primary) !important;
+}
+
+.MuiTablePagination-actions .MuiIconButton-root {
+  color: var(--text-secondary) !important;
+}
+
+.MuiTablePagination-actions .MuiIconButton-root.Mui-disabled {
+  color: var(--text-disabled) !important;
+}
+
+/* Safari-themed Dialog/Modal */
+.MuiDialog-paper {
+  background-color: var(--card-background) !important;
+  border-radius: 20px !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+  overflow: hidden !important;
+}
+
+.MuiDialogTitle-root {
+  background-color: rgba(46, 125, 50, 0.1) !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* Alerts and Snackbars */
+.MuiAlert-standardSuccess {
+  background-color: rgba(76, 175, 80, 0.15) !important;
+  color: #81c784 !important;
+  border: 1px solid rgba(76, 175, 80, 0.3) !important;
+}
+
+.MuiAlert-standardError {
+  background-color: rgba(244, 67, 54, 0.15) !important;
+  color: #e57373 !important;
+  border: 1px solid rgba(244, 67, 54, 0.3) !important;
+}
+
+.MuiAlert-standardWarning {
+  background-color: rgba(255, 152, 0, 0.15) !important;
+  color: #ffb74d !important;
+  border: 1px solid rgba(255, 152, 0, 0.3) !important;
+}
+
+.MuiAlert-standardInfo {
+  background-color: rgba(46, 125, 50, 0.15) !important;
+  color: #66bb6a !important;
+  border: 1px solid rgba(46, 125, 50, 0.3) !important;
+}
+
+/* Safari Theme Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  background-color: rgba(15, 34, 23, 0.3);
+  border-radius: 16px;
+  border: 1px dashed var(--border-color);
+  text-align: center;
+}
+
+.empty-state svg {
+  color: var(--secondary-color);
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+/* Safari Theme Chip Styles */
+.MuiChip-root {
+  font-weight: 600 !important;
+  height: 28px !important;
+  border-radius: 8px !important;
+}
+
+.MuiChip-colorPrimary {
+  background-color: rgba(46, 125, 50, 0.15) !important;
+  color: var(--primary-light) !important;
+}
+
+.MuiChip-colorSecondary {
+  background-color: rgba(255, 152, 0, 0.15) !important;
+  color: var(--secondary-light) !important;
+}
+
+.MuiChip-colorError {
+  background-color: rgba(244, 67, 54, 0.15) !important;
+  color: #e57373 !important;
+}
+
+/* Safari Theme Loading Spinner */
+.safari-spinner {
+  border: 4px solid rgba(46, 125, 50, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid var(--primary-color);
+  width: 30px;
+  height: 30px;
+  animation: safari-spin 1s linear infinite;
+}
+
+@keyframes safari-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Safari Neon Glow Effects */
+.safari-neon-text {
+  color: var(--primary-light);
+  text-shadow: 0 0 5px rgba(102, 187, 106, 0.5),
+    0 0 10px rgba(102, 187, 106, 0.3);
+}
+
+.safari-neon-border {
+  border: 2px solid var(--primary-light);
+  box-shadow: 0 0 5px rgba(102, 187, 106, 0.5),
+    0 0 10px rgba(102, 187, 106, 0.3);
+}
+
+.safari-pulse {
+  animation: safari-pulse-animation 2s infinite;
+}
+
+@keyframes safari-pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(46, 125, 50, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0);
+  }
+}
+
+/* Animal Icons for Empty States */
+.empty-state::after {
+  content: "🦒";
+  font-size: 2.5rem;
+  margin-top: 20px;
+  opacity: 0.5;
+}
+
+.empty-products::after {
+  content: "🦁";
+}
+
+.empty-inventory::after {
+  content: "🐘";
+}
+
+.empty-orders::after {
+  content: "🦓";
+}
+
+.empty-customers::after {
+  content: "🦏";
+}
+
+.custom-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(46, 125, 50, 0.05),
+    rgba(46, 125, 50, 0.3) 50%,
+    rgba(46, 125, 50, 0.05)
+  );
+  margin: 16px 0;
+}
