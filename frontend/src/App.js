@@ -8,6 +8,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/inventory/Dashboard";
 import SalesDashboard from "./pages/sales/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminAccessRequired from "./pages/admin/AdminAccessRequired";
 import CustomerDashboard from "./pages/customer/Dashboard";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -89,6 +91,26 @@ function App() {
               element={
                 isAuthenticated ? getRedirectBasedOnRole() : <Register />
               }
+            />
+
+            {/* Admin Authentication Routes */}
+            <Route
+              path="/admin/login"
+              element={
+                isAuthenticated && user?.role === "admin" ? (
+                  <Navigate to="/admin" />
+                ) : (
+                  <AdminLogin />
+                )
+              }
+            />
+            <Route
+              path="/adminlogin"
+              element={<Navigate to="/admin/login" replace />}
+            />
+            <Route
+              path="/admin/access-required"
+              element={<AdminAccessRequired />}
             />
 
             {/* Root route - redirect to appropriate dashboard */}

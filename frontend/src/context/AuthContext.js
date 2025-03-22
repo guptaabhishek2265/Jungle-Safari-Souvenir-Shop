@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
 
 // Create the auth context
@@ -81,6 +81,17 @@ export const AuthProvider = ({ children }) => {
     setError(null);
 
     try {
+      // Prevent registering with admin role for security
+      if (userData.role === "admin") {
+        setLoading(false);
+        setError(
+          "Admin accounts cannot be created through regular registration"
+        );
+        throw new Error(
+          "Admin accounts cannot be created through regular registration"
+        );
+      }
+
       // Simulate API call - in reality you'd connect to your backend
       // const response = await axios.post(`${API_URL}/users/register`, userData);
 
@@ -115,7 +126,9 @@ export const AuthProvider = ({ children }) => {
       return user;
     } catch (err) {
       setLoading(false);
-      setError(err.response?.data?.message || "Registration failed");
+      setError(
+        err.response?.data?.message || err.message || "Registration failed"
+      );
       throw err;
     }
   };
@@ -251,6 +264,64 @@ export const AuthProvider = ({ children }) => {
     delete axios.defaults.headers.common["Authorization"];
   };
 
+  // Special admin login with enhanced security
+  const adminLogin = async (email, password) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // In a real app, this would hit a dedicated admin API endpoint with additional security
+      // For this demo, we'll check the admin credentials directly
+      if (email === "abhishek2265@gmail.com" && password === "654321") {
+        const fakeToken = `admin-token-${Math.random()
+          .toString(36)
+          .substr(2, 9)}`;
+        const user = {
+          id: "admin-1",
+          name: "Abhishek Admin",
+          email: "abhishek2265@gmail.com",
+          role: "admin",
+          loginTime: new Date().toISOString(),
+          isAdminLogin: true,
+        };
+
+        localStorage.setItem("token", fakeToken);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // Set token in axios headers
+        axios.defaults.headers.common["Authorization"] = `Bearer ${fakeToken}`;
+
+        setToken(fakeToken);
+        setUser(user);
+        setIsAuthenticated(true);
+        setLoading(false);
+
+        // Log admin login (in a real app, this would go to a secure audit log)
+        console.info(
+          `Admin login successful: ${email} at ${new Date().toISOString()}`
+        );
+
+        return user;
+      } else {
+        setLoading(false);
+        setError("Invalid admin credentials");
+        throw new Error("Invalid admin credentials");
+      }
+    } catch (err) {
+      setLoading(false);
+      setError(
+        err.response?.data?.message || err.message || "Admin login failed"
+      );
+
+      // Log failed attempt (in a real app, this would trigger security alerts)
+      console.warn(
+        `Admin login attempt failed: ${email} at ${new Date().toISOString()}`
+      );
+
+      throw err;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -261,6 +332,7 @@ export const AuthProvider = ({ children }) => {
         error,
         register,
         login,
+        adminLogin,
         logout,
       }}
     >
@@ -269,4 +341,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => React.useContext(AuthContext);
+// Export context hook for easier use
+export const useAuth = () => useContext(AuthContext);

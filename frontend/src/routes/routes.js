@@ -1,9 +1,12 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import Layout from "../components/common/Layout";
-import Login from "../pages/auth/Login";
-import Register from "../pages/auth/Register";
-import AdminDashboard from "../pages/admin/AdminDashboard";
+import AdminLayout from "../components/AdminLayout";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import AdminLogin from "../pages/admin/AdminLogin";
+import AdminDashboard from "../pages/admin/Dashboard";
+import AdminAccessRequired from "../pages/admin/AdminAccessRequired";
 import SalesDashboard from "../pages/sales/SalesDashboard";
 import InventoryDashboard from "../pages/inventory/InventoryDashboard";
 import ProductManagement from "../pages/inventory/ProductManagement";
@@ -27,16 +30,30 @@ const routes = [
     element: <Register />,
   },
   {
-    path: "/",
-    element: <Layout />,
+    path: "/admin/login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/admin/access-required",
+    element: <AdminAccessRequired />,
+  },
+  // Admin routes with special admin layout
+  {
+    path: "/admin",
+    element: <AdminLayout />,
     children: [
-      // Admin routes
       {
-        path: "admin/dashboard",
+        path: "dashboard",
         element: <AdminDashboard />,
         roles: ["admin"],
       },
-
+      // Add more admin routes here as needed
+    ],
+  },
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
       // Sales routes
       {
         path: "sales/dashboard",

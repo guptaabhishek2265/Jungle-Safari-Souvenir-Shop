@@ -35,6 +35,7 @@ import {
   Business as BusinessIcon,
   Assignment as AssignmentIcon,
   Warning as WarningIcon,
+  Lock as LockIcon,
 } from "@mui/icons-material";
 
 // Width of the drawer
@@ -262,7 +263,8 @@ const Layout = () => {
   if (
     location.pathname === "/login" ||
     location.pathname === "/register" ||
-    location.pathname === "/"
+    location.pathname === "/" ||
+    location.pathname === "/admin/login"
   ) {
     return <Outlet />;
   }
@@ -345,6 +347,20 @@ const Layout = () => {
                   Settings
                 </MenuItem>
                 <Divider />
+                {!user.isAdminLogin && user.role === "admin" && (
+                  <MenuItem
+                    component={Link}
+                    to="/admin/login"
+                    onClick={handleUserMenuClose}
+                  >
+                    <ListItemIcon>
+                      <LockIcon fontSize="small" color="warning" />
+                    </ListItemIcon>
+                    <Typography color="warning.main">
+                      Admin Secure Login
+                    </Typography>
+                  </MenuItem>
+                )}
                 <MenuItem onClick={handleLogout}>
                   <ListItemIcon>
                     <LogoutIcon fontSize="small" />

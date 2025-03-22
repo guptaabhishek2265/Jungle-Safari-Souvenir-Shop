@@ -373,13 +373,21 @@ const Register = () => {
                 label="Role"
                 onChange={handleChange}
               >
-                <MenuItem value="admin">Admin</MenuItem>
                 <MenuItem value="sales">Sales</MenuItem>
                 <MenuItem value="inventory_manager">Inventory Manager</MenuItem>
                 <MenuItem value="customer">Customer</MenuItem>
               </Select>
               {errors.role && <FormHelperText>{errors.role}</FormHelperText>}
             </FormControl>
+
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ display: "block", mt: 1, mb: 1 }}
+            >
+              Note: Admin accounts require special authorization and are created
+              separately.
+            </Typography>
 
             <TextField
               margin="normal"

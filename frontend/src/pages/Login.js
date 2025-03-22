@@ -11,8 +11,14 @@ import {
   CircularProgress,
   InputAdornment,
   IconButton,
+  Divider,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Visibility,
+  VisibilityOff,
+  Lock as LockIcon,
+  AdminPanelSettings,
+} from "@mui/icons-material";
 import { AuthContext } from "../context/AuthContext";
 import { validateLoginForm } from "../utils/validation";
 import { keyframes } from "@mui/system";
@@ -65,13 +71,16 @@ const Login = () => {
       // Redirect based on user role
       switch (user.role) {
         case "admin":
-          navigate("/admin");
+          navigate("/admin/dashboard");
           break;
         case "sales":
-          navigate("/sales");
+          navigate("/sales/dashboard");
           break;
         case "inventory_manager":
-          navigate("/inventory");
+          navigate("/inventory/dashboard");
+          break;
+        case "customer":
+          navigate("/customer");
           break;
         default:
           navigate("/login");
@@ -281,6 +290,73 @@ const Login = () => {
                   Register here
                 </Link>
               </Typography>
+
+              <Typography
+                variant="body2"
+                align="center"
+                mt={2}
+                sx={{
+                  color: "#666",
+                }}
+              >
+                <Box
+                  component="span"
+                  sx={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    backgroundColor: "rgba(0, 0, 0, 0.05)",
+                    padding: "6px 12px",
+                    borderRadius: "4px",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 0, 0.1)",
+                    },
+                  }}
+                >
+                  <Link
+                    to="/admin/login"
+                    style={{
+                      textDecoration: "none",
+                      color: "#d32f2f",
+                      fontWeight: "bold",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <LockIcon sx={{ fontSize: 16, mr: 0.5 }} />
+                    Admin Access
+                  </Link>
+                </Box>
+              </Typography>
+
+              <Divider sx={{ mt: 3, mb: 3 }} />
+
+              <Box sx={{ width: "100%", textAlign: "center" }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 1 }}
+                >
+                  <strong>For System Administrators</strong>
+                </Typography>
+                <Button
+                  component={Link}
+                  to="/admin/login"
+                  variant="outlined"
+                  color="secondary"
+                  startIcon={<AdminPanelSettings />}
+                  size="small"
+                  sx={{
+                    borderColor: "rgba(211, 47, 47, 0.5)",
+                    "&:hover": {
+                      borderColor: "#d32f2f",
+                      backgroundColor: "rgba(211, 47, 47, 0.08)",
+                    },
+                  }}
+                >
+                  Admin Portal
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Paper>
