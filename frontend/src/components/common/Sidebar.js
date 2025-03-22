@@ -25,7 +25,7 @@ import {
   Logout as LogoutIcon,
   LocalShipping as PurchaseIcon,
   Business as SupplierIcon,
-  AdminPanelSettings as AdminIcon
+  AdminPanelSettings as AdminIcon,
 } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 

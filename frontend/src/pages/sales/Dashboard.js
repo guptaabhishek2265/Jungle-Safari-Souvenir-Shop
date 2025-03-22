@@ -29,6 +29,8 @@ import {
   ListItemText,
   IconButton,
   InputAdornment,
+  alpha,
+  Container,
 } from "@mui/material";
 import {
   AttachMoney as MoneyIcon,
@@ -63,6 +65,34 @@ const itemVariants = {
   hidden: { y: 20, opacity: 0 },
   visible: { y: 0, opacity: 1 },
 };
+
+// Custom styled component for dark background with img7
+const DarkOverlay = ({ children }) => (
+  <Box
+    sx={{
+      position: "relative",
+      zIndex: 1,
+      minHeight: "100vh",
+      width: "100%",
+      "&::before": {
+        content: '""',
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: "url('/images/img7.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+        filter: "brightness(0.3)",
+        zIndex: -1,
+      },
+    }}
+  >
+    {children}
+  </Box>
+);
 
 const SalesDashboard = () => {
   const navigate = useNavigate();
@@ -598,696 +628,387 @@ const SalesDashboard = () => {
   };
 
   return (
-    <DashboardLayout
-      title="Safari Sales Overview"
-      className="sales-dashboard-container"
-    >
-      {/* Safari Stats Cards */}
-      <Box sx={{ mb: 3 }}>
-        <Typography
-          variant="h5"
-          className="safari-neon-text"
+    <DarkOverlay>
+      <DashboardLayout>
+        <Container
+          maxWidth="xl"
           sx={{
-            mb: 2,
-            display: "flex",
-            alignItems: "center",
-            "&::before": {
-              content: '"🌴"',
-              marginRight: "10px",
-              fontSize: "24px",
-            },
+            mt: 3,
+            mb: 4,
+            backgroundColor: alpha("#000", 0.7),
+            backdropFilter: "blur(8px)",
+            borderRadius: 2,
+            padding: 3,
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+            color: "#fff",
           }}
         >
-          Safari Statistics
-        </Typography>
-        <Grid container spacing={3} sx={{ mb: 2 }}>
-          <Grid item xs={12} sm={6} lg={3}>
-            <StatsCard
-              title="Today's Sales"
-              value={formatCurrency(stats.dailySales)}
-              icon={<MoneyIcon />}
-              color="#2e7d32"
-              loading={statsLoading}
-              className="stats-card"
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} lg={3}>
-            <StatsCard
-              title="Monthly Sales"
-              value={formatCurrency(stats.monthlySales)}
-              icon={<CalendarIcon />}
-              color="#1976d2"
-              loading={statsLoading}
-              className="stats-card"
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} lg={3}>
-            <StatsCard
-              title="Total Products"
-              value={stats.totalProducts}
-              icon={<InventoryIcon />}
-              color="#9c27b0"
-              loading={statsLoading}
-              className="stats-card"
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} lg={3}>
-            <StatsCard
-              title="Customers"
-              value={stats.customerCount}
-              icon={<PersonIcon />}
-              color="#ed6c02"
-              loading={statsLoading}
-              className="stats-card"
-            />
-          </Grid>
-        </Grid>
-      </Box>
-
-      {/* Quick Actions */}
-      <Box sx={{ mb: 4 }}>
-        <Typography
-          variant="h5"
-          className="safari-neon-text"
-          sx={{
-            mb: 2,
-            display: "flex",
-            alignItems: "center",
-            "&::before": {
-              content: '"🧭"',
-              marginRight: "10px",
-              fontSize: "24px",
-            },
-          }}
-        >
-          Quick Actions
-        </Typography>
-        <Paper
-          elevation={0}
-          className="safari-neon-border"
-          sx={{
-            p: 3,
-            borderRadius: "20px",
-            position: "relative",
-            overflow: "hidden",
-            background: "rgba(15, 34, 23, 0.3)",
-            backdropFilter: "blur(5px)",
-            border: "1px solid var(--border-color)",
-            "&::after": {
-              content: '"🦏"',
-              position: "absolute",
-              bottom: "10px",
-              right: "15px",
-              fontSize: "40px",
-              opacity: 0.1,
-              zIndex: 0,
-            },
-          }}
-        >
-          <Box sx={{ position: "relative", zIndex: 1 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                >
-                  <Paper
-                    sx={{
-                      p: 3,
-                      borderRadius: "20px",
-                      background:
-                        "linear-gradient(145deg, var(--card-background), rgba(17, 34, 64, 0.7))",
-                      boxShadow: "0 10px 20px var(--shadow-color)",
-                      overflow: "hidden",
-                      position: "relative",
-                      "&::after": {
-                        content: '""',
-                        position: "absolute",
-                        width: "150px",
-                        height: "150px",
-                        background:
-                          "radial-gradient(circle, rgba(45, 212, 191, 0.15) 0%, transparent 70%)",
-                        bottom: "-40px",
-                        left: "-40px",
-                        borderRadius: "50%",
-                        zIndex: 0,
-                      },
-                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                      "&:hover": {
-                        transform: "translateY(-5px)",
-                        boxShadow:
-                          "0 15px 30px var(--shadow-color), 0 0 15px var(--glow-color)",
-                      },
-                    }}
-                    className="stats-card"
-                  >
-                    <Box sx={{ position: "relative", zIndex: 1 }}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        sx={{
-                          fontWeight: 600,
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1.5,
-                          mb: 2,
-                          pb: 1.5,
-                          borderBottom: "1px solid var(--border-color)",
-                          color: "var(--text-primary)",
-                        }}
-                      >
-                        <Box
-                          component={motion.div}
-                          animate={{ rotate: [0, 10, -10, 0] }}
-                          transition={{
-                            repeat: Infinity,
-                            duration: 4,
-                            repeatDelay: 2,
-                          }}
-                          sx={{
-                            background:
-                              "linear-gradient(135deg, var(--success-color) 0%, #059669 100%)",
-                            color: "white",
-                            p: 1,
-                            borderRadius: "10px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <CartIcon fontSize="small" />
-                        </Box>
-                        Test Real-time Sales Tracking
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="var(--text-secondary)"
-                        paragraph
-                        sx={{ mb: 3, lineHeight: 1.6 }}
-                      >
-                        Simulate a new sale to test real-time updates across the
-                        system. This will increase sales figures and decrease
-                        inventory.
-                      </Typography>
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          size="large"
-                          startIcon={<CartIcon />}
-                          onClick={simulateNewSale}
-                          sx={{
-                            borderRadius: "12px",
-                            px: 3,
-                            py: 1.2,
-                            background:
-                              "linear-gradient(to right, var(--success-color), #059669)",
-                            boxShadow: "0 4px 10px rgba(16, 185, 129, 0.3)",
-                            transition: "all 0.3s ease",
-                            "&:hover": {
-                              boxShadow: "0 6px 15px rgba(16, 185, 129, 0.4)",
-                              background:
-                                "linear-gradient(to right, var(--success-color), #059669)",
-                            },
-                          }}
-                        >
-                          Simulate New Sale
-                        </Button>
-                      </motion.div>
-                    </Box>
-                  </Paper>
-                </motion.div>
-              </Grid>
-            </Grid>
-          </Box>
-        </Paper>
-      </Box>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-      >
-        <Alert
-          severity="info"
-          sx={{
-            mb: 3,
-            borderRadius: "12px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-            "& .MuiAlert-icon": {
-              color: "var(--primary-light)",
-            },
-            "& .MuiAlert-message": {
-              fontWeight: 500,
-              color: "var(--text-primary)",
-            },
-            backgroundColor: "rgba(74, 108, 255, 0.1)",
-          }}
-        >
-          Inventory is automatically updated in real-time for all sales. Product
-          stock levels decrease and sales data increases when transactions are
-          completed.
-        </Alert>
-      </motion.div>
-
-      {/* Recent Sales Section */}
-      <Box sx={{ mb: 4 }}>
-        <Typography
-          variant="h5"
-          className="safari-neon-text"
-          sx={{
-            mb: 2,
-            display: "flex",
-            alignItems: "center",
-            "&::before": {
-              content: '"🧾"',
-              marginRight: "10px",
-              fontSize: "24px",
-            },
-          }}
-        >
-          Recent Safari Orders
-        </Typography>
-
-        <Paper
-          sx={{
-            p: 3,
-            borderRadius: "20px",
-            background:
-              "linear-gradient(145deg, var(--card-background), rgba(26, 56, 41, 0.7))",
-            boxShadow: "0 10px 20px var(--shadow-color)",
-            overflow: "hidden",
-            position: "relative",
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              background: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 0a9 9 0 0 0-9 9v30a9 9 0 0 0 9 9h30a9 9 0 0 0 9-9V9a9 9 0 0 0-9-9H9zm0 2h30a7 7 0 0 1 7 7v30a7 7 0 0 1-7 7H9a7 7 0 0 1-7-7V9a7 7 0 0 1 7-7zm13 12a2 2 0 1 0-4 0v14a2 2 0 1 0 4 0v-3.513l12.84 8.139a2 2 0 1 0 2.16-3.372L24.157 21l12.836-8.243a2 2 0 1 0-2.155-3.374L22 17.513V14z' fill='%232e7d32' fill-opacity='0.04' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-              backgroundSize: "120px 120px",
-              zIndex: 0,
-              opacity: 0.5,
-            },
-            "&::after": {
-              content: '"🦁"',
-              position: "absolute",
-              fontSize: "40px",
-              opacity: 0.1,
-              bottom: "20px",
-              right: "20px",
-              zIndex: 0,
-            },
-          }}
-          className="top-products-container"
-        >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
-            sx={{ position: "relative", zIndex: 1 }}
-          >
+          <Box sx={{ mb: 4 }}>
             <Typography
-              variant="h6"
+              variant="h4"
               sx={{
-                display: "flex",
-                alignItems: "center",
-                fontWeight: 600,
+                fontWeight: "bold",
+                color: "#fff",
+                textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
+                mb: 1,
               }}
             >
-              <motion.div
-                animate={{
-                  scale: [1, 1.1, 1],
-                  rotate: [0, 5, 0, -5, 0],
-                }}
-                transition={{ duration: 1, repeat: Infinity, repeatDelay: 5 }}
-              >
-                <MoneyIcon sx={{ mr: 1.5, color: "var(--secondary-color)" }} />
-              </motion.div>
-              Recent Safari Sales
+              <MoneyIcon sx={{ mr: 1, verticalAlign: "middle" }} />
+              Sales Dashboard
             </Typography>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                variant="outlined"
-                color="primary"
-                sx={{
-                  borderRadius: "10px",
-                  fontSize: "0.8rem",
-                  textTransform: "none",
-                  fontWeight: 600,
-                  borderWidth: "2px",
-                }}
-              >
-                View All
-              </Button>
-            </motion.div>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                mb: 2,
+              }}
+            >
+              Manage and track sales performance
+            </Typography>
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setSimulateSaleDialogOpen(true)}
+              startIcon={<CartIcon />}
+              sx={{
+                boxShadow: "0 4px 12px rgba(0, 151, 230, 0.3)",
+                fontWeight: "bold",
+                mt: 1,
+              }}
+            >
+              Simulate New Sale
+            </Button>
           </Box>
 
-          {recentSalesLoading ? (
-            <Box sx={{ py: 4, textAlign: "center" }}>
-              <Typography variant="body1" color="text.secondary">
-                Loading recent sales...
-              </Typography>
-            </Box>
-          ) : recentSales.length > 0 ? (
-            <TableContainer
-              component={motion.div}
+          <Box sx={{ flexGrow: 1 }}>
+            <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              sx={{
-                position: "relative",
-                zIndex: 1,
-                "& .MuiTableCell-root": {
-                  borderColor: "var(--border-color)",
-                  padding: "16px 12px",
-                },
-                "& .MuiTableRow-root:hover": {
-                  backgroundColor: "rgba(46, 125, 50, 0.08)",
-                },
-              }}
             >
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6} md={3}>
+                  <motion.div variants={itemVariants}>
+                    <StatsCard
+                      title="Today's Sales"
+                      value={`₹${stats.dailySales.toLocaleString()}`}
+                      icon={<CalendarIcon />}
+                      color="#0ea5e9"
+                      loading={statsLoading}
+                      trend={{
+                        value: "+12.5%",
+                        label: "vs yesterday",
+                        isUpward: true,
+                      }}
+                    />
+                  </motion.div>
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={3}>
+                  <motion.div variants={itemVariants}>
+                    <StatsCard
+                      title="Monthly Sales"
+                      value={`₹${stats.monthlySales.toLocaleString()}`}
+                      icon={<MoneyIcon />}
+                      color="#10b981"
+                      loading={statsLoading}
+                      trend={{
+                        value: "+8.2%",
+                        label: "vs last month",
+                        isUpward: true,
+                      }}
+                    />
+                  </motion.div>
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={3}>
+                  <motion.div variants={itemVariants}>
+                    <StatsCard
+                      title="Products"
+                      value={stats.totalProducts.toString()}
+                      icon={<InventoryIcon />}
+                      color="#f59e0b"
+                      loading={statsLoading}
+                      trend={{
+                        value: "+3",
+                        label: "new this week",
+                        isUpward: true,
+                      }}
+                    />
+                  </motion.div>
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={3}>
+                  <motion.div variants={itemVariants}>
+                    <StatsCard
+                      title="Customers"
+                      value={stats.customerCount.toString()}
+                      icon={<PersonIcon />}
+                      color="#ec4899"
+                      loading={statsLoading}
+                      trend={{
+                        value: "+5.8%",
+                        label: "new customers",
+                        isUpward: true,
+                      }}
+                    />
+                  </motion.div>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <motion.div variants={itemVariants}>
+                    <Paper
+                      elevation={0}
                       sx={{
-                        fontWeight: 600,
-                        color: "var(--text-primary)",
-                        fontSize: "0.875rem",
+                        p: 3,
+                        backgroundColor: alpha("#000", 0.5),
+                        backdropFilter: "blur(5px)",
+                        border: "1px solid rgba(255, 255, 255, 0.1)",
                       }}
                     >
-                      Order ID
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        fontWeight: 600,
-                        color: "var(--text-primary)",
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      Products
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      sx={{
-                        fontWeight: 600,
-                        color: "var(--text-primary)",
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      Total
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{
-                        fontWeight: 600,
-                        color: "var(--text-primary)",
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      Payment Method
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      sx={{
-                        fontWeight: 600,
-                        color: "var(--text-primary)",
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      Date
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{
-                        fontWeight: 600,
-                        color: "var(--text-primary)",
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      Status
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {recentSales.map((sale, index) => (
-                    <motion.tr
-                      key={sale.id}
-                      component={motion.tr}
-                      variants={itemVariants}
-                      style={{
-                        background:
-                          index % 2 === 0
-                            ? "rgba(46, 125, 50, 0.05)"
-                            : "transparent",
-                        transition: "background-color 0.2s ease",
-                      }}
-                    >
-                      <TableCell sx={{ color: "var(--text-primary)" }}>
-                        {sale.id}
-                      </TableCell>
-                      <TableCell sx={{ color: "var(--text-primary)" }}>
-                        {sale.products.length > 1
-                          ? `${sale.products[0].name} +${
-                              sale.products.length - 1
-                            } more`
-                          : sale.products[0].name}
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ fontWeight: 600, color: "var(--primary-light)" }}
-                      >
-                        {formatCurrency(sale.total)}
-                      </TableCell>
-                      <TableCell align="center">
-                        <Chip
-                          label={sale.paymentMethod}
-                          size="small"
-                          sx={{
-                            background: "rgba(46, 125, 50, 0.15)",
-                            color: "var(--text-primary)",
-                            fontWeight: 500,
-                            borderRadius: "6px",
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        align="right"
+                      <Typography
+                        variant="h6"
                         sx={{
-                          color: "var(--text-secondary)",
-                          fontSize: "0.8rem",
+                          mb: 2,
+                          color: "#fff",
+                          fontWeight: "bold",
                         }}
                       >
-                        {formatDate(sale.date)}
-                      </TableCell>
-                      <TableCell align="center">
-                        <Chip
-                          label={sale.stockUpdated ? "Completed" : "Pending"}
-                          size="small"
-                          color={sale.stockUpdated ? "success" : "warning"}
-                          sx={{
-                            fontWeight: 500,
-                            borderRadius: "6px",
-                            minWidth: "80px",
-                          }}
-                        />
-                      </TableCell>
-                    </motion.tr>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          ) : (
-            <Box
-              sx={{
-                py: 4,
-                textAlign: "center",
-                background: "rgba(46, 125, 50, 0.03)",
+                        Recent Sales
+                      </Typography>
+
+                      {recentSalesLoading ? (
+                        <Box sx={{ textAlign: "center", py: 2 }}>
+                          <motion.div
+                            animate={{
+                              opacity: [0.5, 1, 0.5],
+                              transition: { repeat: Infinity, duration: 1.5 },
+                            }}
+                          >
+                            <Typography variant="body1" color="textSecondary">
+                              Loading recent sales...
+                            </Typography>
+                          </motion.div>
+                        </Box>
+                      ) : recentSales.length === 0 ? (
+                        <Box sx={{ textAlign: "center", py: 2 }}>
+                          <Typography variant="body1" color="textSecondary">
+                            No sales records found
+                          </Typography>
+                        </Box>
+                      ) : (
+                        <TableContainer>
+                          <Table>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell
+                                  sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                                >
+                                  Date
+                                </TableCell>
+                                <TableCell
+                                  sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                                >
+                                  Products
+                                </TableCell>
+                                <TableCell
+                                  sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                                >
+                                  Customer
+                                </TableCell>
+                                <TableCell
+                                  sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                                >
+                                  Payment
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                                >
+                                  Amount
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {recentSales.map((sale, index) => (
+                                <TableRow key={index}>
+                                  <TableCell sx={{ color: "#fff" }}>
+                                    {formatDate(sale.timestamp)}
+                                  </TableCell>
+                                  <TableCell sx={{ color: "#fff" }}>
+                                    {sale.products
+                                      .map((p) => `${p.name} (${p.quantity})`)
+                                      .join(", ")}
+                                  </TableCell>
+                                  <TableCell sx={{ color: "#fff" }}>
+                                    {sale.customer?.name || "Guest"}
+                                  </TableCell>
+                                  <TableCell sx={{ color: "#fff" }}>
+                                    <Chip
+                                      label={
+                                        sale.paymentMethod === "credit-card"
+                                          ? "Credit Card"
+                                          : sale.paymentMethod === "debit-card"
+                                          ? "Debit Card"
+                                          : sale.paymentMethod === "upi"
+                                          ? "UPI"
+                                          : "Cash"
+                                      }
+                                      size="small"
+                                      color={
+                                        sale.paymentMethod === "cash"
+                                          ? "default"
+                                          : "primary"
+                                      }
+                                      variant="outlined"
+                                    />
+                                  </TableCell>
+                                  <TableCell
+                                    align="right"
+                                    sx={{
+                                      color: "#0ea5e9",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {formatCurrency(sale.total)}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      )}
+                    </Paper>
+                  </motion.div>
+                </Grid>
+
+                <Grid item xs={12} md={8}>
+                  <motion.div variants={itemVariants}>
+                    <SalesChart
+                      title="Monthly Sales Trend"
+                      subtitle="Revenue over the past year"
+                      data={{
+                        labels: [
+                          "Jan",
+                          "Feb",
+                          "Mar",
+                          "Apr",
+                          "May",
+                          "Jun",
+                          "Jul",
+                          "Aug",
+                          "Sep",
+                          "Oct",
+                          "Nov",
+                          "Dec",
+                        ],
+                        datasets: [
+                          {
+                            label: "Monthly Sales (₹)",
+                            data: [
+                              stats.monthlySales * 0.5,
+                              stats.monthlySales * 0.6,
+                              stats.monthlySales * 0.7,
+                              stats.monthlySales * 0.8,
+                              stats.monthlySales * 0.9,
+                              stats.monthlySales,
+                              stats.monthlySales * 1.1,
+                              stats.monthlySales * 1.2,
+                              stats.monthlySales * 1.3,
+                              stats.monthlySales * 1.4,
+                              stats.monthlySales * 1.5,
+                              stats.monthlySales * 1.6,
+                            ],
+                          },
+                        ],
+                      }}
+                      className="sales-chart-container"
+                    />
+                  </motion.div>
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <motion.div variants={itemVariants}>
+                    <TopSellingProducts
+                      height={380}
+                      products={[
+                        {
+                          name: "Safari Hat",
+                          sales: 18,
+                          amount: 10782,
+                          image: "🧢",
+                        },
+                        {
+                          name: "Binoculars",
+                          sales: 12,
+                          amount: 23988,
+                          image: "🔭",
+                        },
+                        {
+                          name: "Water Bottle",
+                          sales: 24,
+                          amount: 10800,
+                          image: "🧴",
+                        },
+                        {
+                          name: "Trail Mix",
+                          sales: 36,
+                          amount: 4320,
+                          image: "🥜",
+                        },
+                        {
+                          name: "Hiking Boots",
+                          sales: 15,
+                          amount: 18750,
+                          image: "👢",
+                        },
+                      ]}
+                      className="top-products-container"
+                    />
+                  </motion.div>
+                </Grid>
+              </Grid>
+            </motion.div>
+          </Box>
+
+          <SimulateSaleDialog
+            open={simulateSaleDialogOpen}
+            onClose={() => setSimulateSaleDialogOpen(false)}
+            onConfirm={handleConfirmSimulatedSale}
+            availableProducts={inventoryContext?.products || []}
+          />
+
+          <Snackbar
+            open={showSuccess}
+            autoHideDuration={6000}
+            onClose={() => setShowSuccess(false)}
+            sx={{
+              "& .MuiPaper-root": {
+                backgroundColor: "rgba(16, 185, 129, 0.1)",
+                backdropFilter: "blur(10px)",
                 borderRadius: "12px",
-                p: 3,
-                border: "1px dashed var(--border-color)",
-                position: "relative",
-                zIndex: 1,
+                border: "1px solid var(--success-color)",
+              },
+            }}
+          >
+            <Alert
+              onClose={() => setShowSuccess(false)}
+              severity="success"
+              sx={{
+                backgroundColor: "transparent",
+                color: "var(--text-primary)",
+                "& .MuiAlert-icon": {
+                  color: "var(--success-color)",
+                },
               }}
             >
-              <Typography variant="body1" color="var(--text-primary)">
-                No recent safari sales found
-              </Typography>
-              <Typography
-                variant="body2"
-                color="var(--text-secondary)"
-                sx={{ mt: 1 }}
-              >
-                Simulated sales will appear here
-              </Typography>
-            </Box>
-          )}
-        </Paper>
-      </Box>
-
-      {/* Recent Sales & Chart Section */}
-      <Box sx={{ mb: 3 }}>
-        <Typography
-          variant="h5"
-          className="safari-neon-text"
-          sx={{
-            mb: 2,
-            display: "flex",
-            alignItems: "center",
-            "&::before": {
-              content: '"📊"',
-              marginRight: "10px",
-              fontSize: "24px",
-            },
-          }}
-        >
-          Sales Analytics
-        </Typography>
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} md={8}>
-            <SalesChart
-              height={380}
-              data={{
-                week: {
-                  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-                  data: [
-                    stats.dailySales * 0.5,
-                    stats.dailySales * 0.7,
-                    stats.dailySales * 0.4,
-                    stats.dailySales * 0.8,
-                    stats.dailySales,
-                    stats.dailySales * 0.6,
-                    stats.dailySales * 0.9,
-                  ],
-                },
-                month: {
-                  labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-                  data: [
-                    stats.monthlySales * 0.2,
-                    stats.monthlySales * 0.3,
-                    stats.monthlySales * 0.2,
-                    stats.monthlySales * 0.3,
-                  ],
-                },
-                year: {
-                  labels: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                  ],
-                  data: [
-                    stats.monthlySales * 0.5,
-                    stats.monthlySales * 0.6,
-                    stats.monthlySales * 0.7,
-                    stats.monthlySales * 0.8,
-                    stats.monthlySales * 0.9,
-                    stats.monthlySales,
-                    stats.monthlySales * 1.1,
-                    stats.monthlySales * 1.2,
-                    stats.monthlySales * 1.3,
-                    stats.monthlySales * 1.4,
-                    stats.monthlySales * 1.5,
-                    stats.monthlySales * 1.6,
-                  ],
-                },
-              }}
-              className="sales-chart-container"
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <TopSellingProducts
-              height={380}
-              products={[
-                {
-                  name: "Safari Hat",
-                  sales: 18,
-                  amount: 10782,
-                  image: "🧢",
-                },
-                {
-                  name: "Binoculars",
-                  sales: 12,
-                  amount: 23988,
-                  image: "🔭",
-                },
-                {
-                  name: "Water Bottle",
-                  sales: 24,
-                  amount: 10800,
-                  image: "🧴",
-                },
-                {
-                  name: "Trail Mix",
-                  sales: 36,
-                  amount: 4320,
-                  image: "🥜",
-                },
-                {
-                  name: "Hiking Boots",
-                  sales: 15,
-                  amount: 18750,
-                  image: "👢",
-                },
-              ]}
-              className="top-products-container"
-            />
-          </Grid>
-        </Grid>
-      </Box>
-
-      <SimulateSaleDialog
-        open={simulateSaleDialogOpen}
-        onClose={() => setSimulateSaleDialogOpen(false)}
-        onConfirm={handleConfirmSimulatedSale}
-        availableProducts={inventoryContext?.products || []}
-      />
-
-      <Snackbar
-        open={showSuccess}
-        autoHideDuration={6000}
-        onClose={() => setShowSuccess(false)}
-        sx={{
-          "& .MuiPaper-root": {
-            backgroundColor: "rgba(16, 185, 129, 0.1)",
-            backdropFilter: "blur(10px)",
-            borderRadius: "12px",
-            border: "1px solid var(--success-color)",
-          },
-        }}
-      >
-        <Alert
-          onClose={() => setShowSuccess(false)}
-          severity="success"
-          sx={{
-            backgroundColor: "transparent",
-            color: "var(--text-primary)",
-            "& .MuiAlert-icon": {
-              color: "var(--success-color)",
-            },
-          }}
-        >
-          {successMessage}
-        </Alert>
-      </Snackbar>
-    </DashboardLayout>
+              {successMessage}
+            </Alert>
+          </Snackbar>
+        </Container>
+      </DashboardLayout>
+    </DarkOverlay>
   );
 };
 

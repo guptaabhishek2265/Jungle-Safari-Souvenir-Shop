@@ -27,6 +27,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  alpha,
 } from "@mui/material";
 import {
   ShoppingCart as CartIcon,
@@ -44,6 +45,32 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import { InventoryContext } from "../inventory/Dashboard";
 import { useTheme } from "../../context/ThemeContext"; // Import the global theme hook
+
+// Custom styled components for dark background effect
+const DarkOverlay = ({ children }) => (
+  <Box
+    sx={{
+      position: "relative",
+      zIndex: 1,
+      "&::before": {
+        content: '""',
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: "url('/images/img6.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+        filter: "brightness(0.4)",
+        zIndex: -1,
+      },
+    }}
+  >
+    {children}
+  </Box>
+);
 
 const CustomerDashboard = () => {
   const navigate = useNavigate();
@@ -864,430 +891,463 @@ const CustomerDashboard = () => {
 
   // Main component render
   return (
-    <Container
-      maxWidth="xl"
-      className="customer-dashboard-container sales-dashboard-container"
-      sx={{ mt: 3, mb: 4 }}
-    >
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={3}
+    <DarkOverlay>
+      <Container
+        maxWidth="xl"
+        className="customer-dashboard-container sales-dashboard-container"
+        sx={{
+          mt: 3,
+          mb: 4,
+          backgroundColor: alpha("#000", 0.6),
+          backdropFilter: "blur(5px)",
+          borderRadius: 2,
+          padding: 3,
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+          color: "#fff",
+        }}
       >
-        <Typography variant="h4" gutterBottom className="primary-text">
-          <PersonIcon sx={{ mr: 1, verticalAlign: "middle" }} />
-          Customer Dashboard
-        </Typography>
-
-        <Box display="flex" alignItems="center">
-          <Button
-            variant={activeView === "shop" ? "contained" : "outlined"}
-            color="primary"
-            startIcon={<StoreIcon />}
-            onClick={() => {
-              setActiveView("shop");
-              navigate("/customer");
-            }}
-            sx={{ mr: 1 }}
-            className={activeView === "shop" ? "primary-button" : ""}
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
+        >
+          <Typography
+            variant="h4"
+            gutterBottom
+            className="primary-text"
+            sx={{ color: "#fff", textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}
           >
-            Shop
-          </Button>
-          <Button
-            variant={activeView === "orders" ? "contained" : "outlined"}
-            color="primary"
-            startIcon={<ReceiptIcon />}
-            onClick={() => {
-              setActiveView("orders");
-              navigate("/customer/orders");
-            }}
-            className={activeView === "orders" ? "secondary-button" : ""}
-          >
-            My Orders
-          </Button>
-        </Box>
-      </Box>
-
-      <div className="custom-divider"></div>
-
-      {activeView === "shop" ? (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            {renderProductGrid()}
-          </Grid>
-          <Grid item xs={12} md={4}>
-            {renderCart()}
-          </Grid>
-        </Grid>
-      ) : (
-        renderOrderHistory()
-      )}
-
-      {/* Payment Form Dialog */}
-      <Dialog
-        open={checkoutOpen}
-        onClose={handleCloseCheckout}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{ className: "custom-dialog-paper" }}
-      >
-        <DialogContent>
-          <Typography variant="h6" gutterBottom>
-            Complete Your Purchase
+            <PersonIcon sx={{ mr: 1, verticalAlign: "middle" }} />
+            Customer Dashboard
           </Typography>
 
-          <Box mb={3}>
-            <Typography variant="subtitle1" gutterBottom>
-              Order Summary
-            </Typography>
-            <List dense>
-              {cart.map((item) => (
-                <ListItem key={item.id}>
-                  <ListItemText
-                    primary={`${item.name} x ${item.quantity}`}
-                    secondary={formatCurrency(item.price)}
-                  />
-                  <Typography>
-                    {formatCurrency(item.price * item.quantity)}
-                  </Typography>
-                </ListItem>
-              ))}
-            </List>
-
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              mt={2}
+          <Box display="flex" alignItems="center">
+            <Button
+              variant={activeView === "shop" ? "contained" : "outlined"}
+              color="primary"
+              startIcon={<StoreIcon />}
+              onClick={() => {
+                setActiveView("shop");
+                navigate("/customer");
+              }}
+              sx={{
+                mr: 1,
+                borderColor: "#fff",
+                color: activeView !== "shop" ? "#fff" : undefined,
+              }}
+              className={activeView === "shop" ? "primary-button" : ""}
             >
-              <Box>
-                <Typography variant="body2">
-                  Subtotal: {formatCurrency(orderTotals.subtotal)}
-                </Typography>
-                <Typography variant="body2">
-                  Tax (18% GST): {formatCurrency(orderTotals.taxAmount)}
-                </Typography>
-              </Box>
-              <Typography variant="h6" color="primary">
-                Total: {formatCurrency(orderTotals.totalAmount)}
+              Shop
+            </Button>
+            <Button
+              variant={activeView === "orders" ? "contained" : "outlined"}
+              color="primary"
+              startIcon={<ReceiptIcon />}
+              onClick={() => {
+                setActiveView("orders");
+                navigate("/customer/orders");
+              }}
+              sx={{
+                borderColor: "#fff",
+                color: activeView !== "orders" ? "#fff" : undefined,
+              }}
+              className={activeView === "orders" ? "secondary-button" : ""}
+            >
+              My Orders
+            </Button>
+          </Box>
+        </Box>
+
+        <div className="custom-divider"></div>
+
+        {activeView === "shop" ? (
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={8}>
+              {renderProductGrid()}
+            </Grid>
+            <Grid item xs={12} md={4}>
+              {renderCart()}
+            </Grid>
+          </Grid>
+        ) : (
+          renderOrderHistory()
+        )}
+
+        {/* Payment Form Dialog */}
+        <Dialog
+          open={checkoutOpen}
+          onClose={handleCloseCheckout}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{ className: "custom-dialog-paper" }}
+        >
+          <DialogContent>
+            <Typography variant="h6" gutterBottom>
+              Complete Your Purchase
+            </Typography>
+
+            <Box mb={3}>
+              <Typography variant="subtitle1" gutterBottom>
+                Order Summary
               </Typography>
-            </Box>
-          </Box>
+              <List dense>
+                {cart.map((item) => (
+                  <ListItem key={item.id}>
+                    <ListItemText
+                      primary={`${item.name} x ${item.quantity}`}
+                      secondary={formatCurrency(item.price)}
+                    />
+                    <Typography>
+                      {formatCurrency(item.price * item.quantity)}
+                    </Typography>
+                  </ListItem>
+                ))}
+              </List>
 
-          <Divider sx={{ my: 2 }} />
-
-          <Typography variant="subtitle1" gutterBottom>
-            Payment Method
-          </Typography>
-
-          {/* Payment Method Selection */}
-          <Box mb={3}>
-            <FormControl component="fieldset">
-              <RadioGroup
-                aria-label="payment-method"
-                name="payment-method"
-                defaultValue="credit-card"
-                onChange={(e) => setPaymentMethod(e.target.value)}
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                mt={2}
               >
-                <FormControlLabel
-                  value="credit-card"
-                  control={<Radio />}
-                  label={
-                    <Box display="flex" alignItems="center">
-                      <CreditCardIcon sx={{ mr: 1 }} /> Credit Card
-                    </Box>
-                  }
-                />
-                <FormControlLabel
-                  value="debit-card"
-                  control={<Radio />}
-                  label={
-                    <Box display="flex" alignItems="center">
-                      <CreditCardIcon sx={{ mr: 1 }} /> Debit Card
-                    </Box>
-                  }
-                />
-                <FormControlLabel
-                  value="cash"
-                  control={<Radio />}
-                  label={
-                    <Box display="flex" alignItems="center">
-                      <PaymentIcon sx={{ mr: 1 }} /> Cash on Delivery
-                    </Box>
-                  }
-                />
-                <FormControlLabel
-                  value="upi"
-                  control={<Radio />}
-                  label={
-                    <Box display="flex" alignItems="center">
-                      <AccountBalanceIcon sx={{ mr: 1 }} /> UPI
-                    </Box>
-                  }
-                />
-              </RadioGroup>
-            </FormControl>
-          </Box>
-
-          {/* Dynamic Payment Details Form */}
-          {paymentMethod === "credit-card" && (
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  label="Card Number"
-                  fullWidth
-                  placeholder="1234 5678 9012 3456"
-                  required
-                  inputProps={{ maxLength: 19 }}
-                  onChange={(e) => {
-                    // Format card number with spaces
-                    const value = e.target.value.replace(/\D/g, "");
-                    const formattedValue = value.replace(
-                      /(\d{4})(?=\d)/g,
-                      "$1 "
-                    );
-                    e.target.value = formattedValue;
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Expiry Date"
-                  fullWidth
-                  placeholder="MM/YY"
-                  required
-                  inputProps={{ maxLength: 5 }}
-                  onChange={(e) => {
-                    // Format date as MM/YY
-                    const value = e.target.value.replace(/\D/g, "");
-                    if (value.length > 2) {
-                      e.target.value = `${value.slice(0, 2)}/${value.slice(2)}`;
-                    }
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="CVV"
-                  fullWidth
-                  placeholder="123"
-                  required
-                  type="password"
-                  inputProps={{ maxLength: 3 }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Cardholder Name"
-                  fullWidth
-                  placeholder="John Doe"
-                  required
-                />
-              </Grid>
-            </Grid>
-          )}
-
-          {paymentMethod === "debit-card" && (
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  label="Card Number"
-                  fullWidth
-                  placeholder="1234 5678 9012 3456"
-                  required
-                  inputProps={{ maxLength: 19 }}
-                  onChange={(e) => {
-                    // Format card number with spaces
-                    const value = e.target.value.replace(/\D/g, "");
-                    const formattedValue = value.replace(
-                      /(\d{4})(?=\d)/g,
-                      "$1 "
-                    );
-                    e.target.value = formattedValue;
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Expiry Date"
-                  fullWidth
-                  placeholder="MM/YY"
-                  required
-                  inputProps={{ maxLength: 5 }}
-                  onChange={(e) => {
-                    // Format date as MM/YY
-                    const value = e.target.value.replace(/\D/g, "");
-                    if (value.length > 2) {
-                      e.target.value = `${value.slice(0, 2)}/${value.slice(2)}`;
-                    }
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="CVV"
-                  fullWidth
-                  placeholder="123"
-                  required
-                  type="password"
-                  inputProps={{ maxLength: 3 }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Cardholder Name"
-                  fullWidth
-                  placeholder="John Doe"
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Bank Name"
-                  fullWidth
-                  placeholder="Your Bank"
-                  required
-                />
-              </Grid>
-            </Grid>
-          )}
-
-          {paymentMethod === "upi" && (
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  label="UPI ID"
-                  fullWidth
-                  placeholder="username@upi"
-                  required
-                  helperText="Example: yourname@okaxis or yourname@ybl"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Alert severity="info">
-                  You will receive a payment request on your UPI app. Please
-                  keep your UPI app ready.
-                </Alert>
-              </Grid>
-            </Grid>
-          )}
-
-          {paymentMethod === "cash" && (
-            <Alert severity="info" sx={{ mt: 2 }}>
-              Pay with cash when your order is delivered. Please keep exact
-              change ready.
-            </Alert>
-          )}
-        </DialogContent>
-
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={handleCloseCheckout}>Cancel</Button>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<PaymentIcon />}
-            onClick={() => {
-              // Get all payment form details
-              let details = {};
-
-              if (
-                paymentMethod === "credit-card" ||
-                paymentMethod === "debit-card"
-              ) {
-                const cardNumber = document.querySelector(
-                  'input[placeholder="1234 5678 9012 3456"]'
-                )?.value;
-                const expiry = document.querySelector(
-                  'input[placeholder="MM/YY"]'
-                )?.value;
-                const cardholderName = document.querySelector(
-                  'input[placeholder="John Doe"]'
-                )?.value;
-
-                if (!cardNumber || !expiry || !cardholderName) {
-                  alert("Please fill all card details");
-                  return;
-                }
-
-                details = { cardType: paymentMethod, cardholderName };
-              } else if (paymentMethod === "upi") {
-                const upiId = document.querySelector(
-                  'input[placeholder="username@upi"]'
-                )?.value;
-
-                if (!upiId) {
-                  alert("Please enter a valid UPI ID");
-                  return;
-                }
-
-                details = { upiId };
-              }
-
-              handleProcessPayment({
-                method: paymentMethod,
-                details: details,
-              });
-            }}
-          >
-            Pay {formatCurrency(orderTotals.totalAmount)}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Order Success Dialog */}
-      <Dialog
-        open={successOpen}
-        onClose={handleCloseSuccess}
-        PaperProps={{ className: "custom-dialog-paper" }}
-      >
-        <DialogContent>
-          <Box display="flex" flexDirection="column" alignItems="center" p={2}>
-            <CheckCircleIcon color="success" sx={{ fontSize: 60, mb: 2 }} />
-            <Typography variant="h5" gutterBottom>
-              Order Placed Successfully!
-            </Typography>
-            <Typography variant="body1" align="center" gutterBottom>
-              Your order #{orderDetails?.id} has been placed successfully.
-            </Typography>
-            <Typography variant="body2" color="text.secondary" align="center">
-              A confirmation has been sent to your email.
-            </Typography>
-
-            <Box my={2} width="100%">
-              <Alert severity="success">
-                <Box display="flex" alignItems="center">
+                <Box>
                   <Typography variant="body2">
-                    Inventory has been updated successfully! Your order is being
-                    processed.
+                    Subtotal: {formatCurrency(orderTotals.subtotal)}
+                  </Typography>
+                  <Typography variant="body2">
+                    Tax (18% GST): {formatCurrency(orderTotals.taxAmount)}
                   </Typography>
                 </Box>
-              </Alert>
+                <Typography variant="h6" color="primary">
+                  Total: {formatCurrency(orderTotals.totalAmount)}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        </DialogContent>
 
-        <DialogActions sx={{ p: 2 }}>
-          <Button
-            variant="outlined"
-            onClick={() => {
-              handleCloseSuccess();
-              setActiveView("orders");
-              navigate("/customer/orders");
-            }}
-          >
-            View Orders
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCloseSuccess}
-          >
-            Continue Shopping
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+            <Divider sx={{ my: 2 }} />
+
+            <Typography variant="subtitle1" gutterBottom>
+              Payment Method
+            </Typography>
+
+            {/* Payment Method Selection */}
+            <Box mb={3}>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  aria-label="payment-method"
+                  name="payment-method"
+                  defaultValue="credit-card"
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                >
+                  <FormControlLabel
+                    value="credit-card"
+                    control={<Radio />}
+                    label={
+                      <Box display="flex" alignItems="center">
+                        <CreditCardIcon sx={{ mr: 1 }} /> Credit Card
+                      </Box>
+                    }
+                  />
+                  <FormControlLabel
+                    value="debit-card"
+                    control={<Radio />}
+                    label={
+                      <Box display="flex" alignItems="center">
+                        <CreditCardIcon sx={{ mr: 1 }} /> Debit Card
+                      </Box>
+                    }
+                  />
+                  <FormControlLabel
+                    value="cash"
+                    control={<Radio />}
+                    label={
+                      <Box display="flex" alignItems="center">
+                        <PaymentIcon sx={{ mr: 1 }} /> Cash on Delivery
+                      </Box>
+                    }
+                  />
+                  <FormControlLabel
+                    value="upi"
+                    control={<Radio />}
+                    label={
+                      <Box display="flex" alignItems="center">
+                        <AccountBalanceIcon sx={{ mr: 1 }} /> UPI
+                      </Box>
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Box>
+
+            {/* Dynamic Payment Details Form */}
+            {paymentMethod === "credit-card" && (
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Card Number"
+                    fullWidth
+                    placeholder="1234 5678 9012 3456"
+                    required
+                    inputProps={{ maxLength: 19 }}
+                    onChange={(e) => {
+                      // Format card number with spaces
+                      const value = e.target.value.replace(/\D/g, "");
+                      const formattedValue = value.replace(
+                        /(\d{4})(?=\d)/g,
+                        "$1 "
+                      );
+                      e.target.value = formattedValue;
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    label="Expiry Date"
+                    fullWidth
+                    placeholder="MM/YY"
+                    required
+                    inputProps={{ maxLength: 5 }}
+                    onChange={(e) => {
+                      // Format date as MM/YY
+                      const value = e.target.value.replace(/\D/g, "");
+                      if (value.length > 2) {
+                        e.target.value = `${value.slice(0, 2)}/${value.slice(
+                          2
+                        )}`;
+                      }
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    label="CVV"
+                    fullWidth
+                    placeholder="123"
+                    required
+                    type="password"
+                    inputProps={{ maxLength: 3 }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Cardholder Name"
+                    fullWidth
+                    placeholder="John Doe"
+                    required
+                  />
+                </Grid>
+              </Grid>
+            )}
+
+            {paymentMethod === "debit-card" && (
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Card Number"
+                    fullWidth
+                    placeholder="1234 5678 9012 3456"
+                    required
+                    inputProps={{ maxLength: 19 }}
+                    onChange={(e) => {
+                      // Format card number with spaces
+                      const value = e.target.value.replace(/\D/g, "");
+                      const formattedValue = value.replace(
+                        /(\d{4})(?=\d)/g,
+                        "$1 "
+                      );
+                      e.target.value = formattedValue;
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    label="Expiry Date"
+                    fullWidth
+                    placeholder="MM/YY"
+                    required
+                    inputProps={{ maxLength: 5 }}
+                    onChange={(e) => {
+                      // Format date as MM/YY
+                      const value = e.target.value.replace(/\D/g, "");
+                      if (value.length > 2) {
+                        e.target.value = `${value.slice(0, 2)}/${value.slice(
+                          2
+                        )}`;
+                      }
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    label="CVV"
+                    fullWidth
+                    placeholder="123"
+                    required
+                    type="password"
+                    inputProps={{ maxLength: 3 }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Cardholder Name"
+                    fullWidth
+                    placeholder="John Doe"
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Bank Name"
+                    fullWidth
+                    placeholder="Your Bank"
+                    required
+                  />
+                </Grid>
+              </Grid>
+            )}
+
+            {paymentMethod === "upi" && (
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    label="UPI ID"
+                    fullWidth
+                    placeholder="username@upi"
+                    required
+                    helperText="Example: yourname@okaxis or yourname@ybl"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Alert severity="info">
+                    You will receive a payment request on your UPI app. Please
+                    keep your UPI app ready.
+                  </Alert>
+                </Grid>
+              </Grid>
+            )}
+
+            {paymentMethod === "cash" && (
+              <Alert severity="info" sx={{ mt: 2 }}>
+                Pay with cash when your order is delivered. Please keep exact
+                change ready.
+              </Alert>
+            )}
+          </DialogContent>
+
+          <DialogActions sx={{ p: 2 }}>
+            <Button onClick={handleCloseCheckout}>Cancel</Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<PaymentIcon />}
+              onClick={() => {
+                // Get all payment form details
+                let details = {};
+
+                if (
+                  paymentMethod === "credit-card" ||
+                  paymentMethod === "debit-card"
+                ) {
+                  const cardNumber = document.querySelector(
+                    'input[placeholder="1234 5678 9012 3456"]'
+                  )?.value;
+                  const expiry = document.querySelector(
+                    'input[placeholder="MM/YY"]'
+                  )?.value;
+                  const cardholderName = document.querySelector(
+                    'input[placeholder="John Doe"]'
+                  )?.value;
+
+                  if (!cardNumber || !expiry || !cardholderName) {
+                    alert("Please fill all card details");
+                    return;
+                  }
+
+                  details = { cardType: paymentMethod, cardholderName };
+                } else if (paymentMethod === "upi") {
+                  const upiId = document.querySelector(
+                    'input[placeholder="username@upi"]'
+                  )?.value;
+
+                  if (!upiId) {
+                    alert("Please enter a valid UPI ID");
+                    return;
+                  }
+
+                  details = { upiId };
+                }
+
+                handleProcessPayment({
+                  method: paymentMethod,
+                  details: details,
+                });
+              }}
+            >
+              Pay {formatCurrency(orderTotals.totalAmount)}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Order Success Dialog */}
+        <Dialog
+          open={successOpen}
+          onClose={handleCloseSuccess}
+          PaperProps={{ className: "custom-dialog-paper" }}
+        >
+          <DialogContent>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              p={2}
+            >
+              <CheckCircleIcon color="success" sx={{ fontSize: 60, mb: 2 }} />
+              <Typography variant="h5" gutterBottom>
+                Order Placed Successfully!
+              </Typography>
+              <Typography variant="body1" align="center" gutterBottom>
+                Your order #{orderDetails?.id} has been placed successfully.
+              </Typography>
+              <Typography variant="body2" color="text.secondary" align="center">
+                A confirmation has been sent to your email.
+              </Typography>
+
+              <Box my={2} width="100%">
+                <Alert severity="success">
+                  <Box display="flex" alignItems="center">
+                    <Typography variant="body2">
+                      Inventory has been updated successfully! Your order is
+                      being processed.
+                    </Typography>
+                  </Box>
+                </Alert>
+              </Box>
+            </Box>
+          </DialogContent>
+
+          <DialogActions sx={{ p: 2 }}>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                handleCloseSuccess();
+                setActiveView("orders");
+                navigate("/customer/orders");
+              }}
+            >
+              View Orders
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCloseSuccess}
+            >
+              Continue Shopping
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </DarkOverlay>
   );
 };
 

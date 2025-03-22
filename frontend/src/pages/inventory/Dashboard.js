@@ -20,6 +20,8 @@ import {
   Card,
   CardContent,
   Chip,
+  Container,
+  alpha,
 } from "@mui/material";
 import {
   Inventory as InventoryIcon,
@@ -34,6 +36,7 @@ import {
   InsertChart as ChartIcon,
   Autorenew as AutorenewIcon,
 } from "@mui/icons-material";
+import { motion } from "framer-motion";
 
 // Import inventory-related components
 import StockTable from "../../components/inventory/StockTable";
@@ -48,6 +51,109 @@ import AutoReorderSettings from "../../components/inventory/AutoReorderSettings"
 
 // Create inventory context for real-time updates
 export const InventoryContext = React.createContext();
+
+// Particle animation component for cool background effects
+const ParticleAnimation = () => {
+  return (
+    <Box
+      sx={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 0,
+        overflow: "hidden",
+        pointerEvents: "none",
+      }}
+    >
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{
+            x: Math.random() * 100 + "%",
+            y: Math.random() * 100 + "%",
+            scale: Math.random() * 0.5 + 0.5,
+            opacity: Math.random() * 0.3 + 0.1,
+          }}
+          animate={{
+            x: [
+              Math.random() * 100 + "%",
+              Math.random() * 100 + "%",
+              Math.random() * 100 + "%",
+              Math.random() * 100 + "%",
+            ],
+            y: [
+              Math.random() * 100 + "%",
+              Math.random() * 100 + "%",
+              Math.random() * 100 + "%",
+              Math.random() * 100 + "%",
+            ],
+            opacity: [
+              Math.random() * 0.3 + 0.1,
+              Math.random() * 0.5 + 0.2,
+              Math.random() * 0.3 + 0.1,
+            ],
+          }}
+          transition={{
+            duration: 20 + Math.random() * 30,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          style={{
+            position: "absolute",
+            borderRadius: "50%",
+            background: "rgba(255, 255, 255, 0.1)",
+            boxShadow: "0 0 20px rgba(255, 255, 255, 0.2)",
+            width: 20 + Math.random() * 50 + "px",
+            height: 20 + Math.random() * 50 + "px",
+          }}
+        />
+      ))}
+    </Box>
+  );
+};
+
+// Interactive background with img8.webp
+const InteractiveBackground = ({ children }) => {
+  return (
+    <Box
+      sx={{
+        position: "relative",
+        minHeight: "100vh",
+        width: "100%",
+        "&::before": {
+          content: '""',
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: "url('/images/img8.webp')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+          filter: "brightness(0.5) contrast(1.1) saturate(1.2)",
+          zIndex: -2,
+        },
+        "&::after": {
+          content: '""',
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background:
+            "linear-gradient(135deg, rgba(0,20,40,0.8) 0%, rgba(0,60,30,0.7) 100%)",
+          zIndex: -1,
+        },
+      }}
+    >
+      <ParticleAnimation />
+      {children}
+    </Box>
+  );
+};
 
 // Create a provider component
 export const InventoryProvider = ({ children }) => {
@@ -470,73 +576,103 @@ const InventoryManagerDashboard = () => {
           <>
             <Grid container spacing={3} sx={{ mb: 4 }}>
               <Grid item xs={12} sm={6} md={4}>
-                <StatsCard
-                  title="Total Products"
-                  value={inventoryContext.stats?.totalProducts || 0}
-                  icon={<InventoryIcon fontSize="large" />}
-                  loading={loadingStats}
-                  color="#4caf50"
-                />
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                >
+                  <StatsCard
+                    title="Total Products"
+                    value={inventoryContext.stats?.totalProducts || 0}
+                    icon={<InventoryIcon fontSize="large" />}
+                    loading={loadingStats}
+                    color="#4caf50"
+                  />
+                </motion.div>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <StatsCard
-                  title="Total Stock"
-                  value={inventoryContext.stats?.totalStock || 0}
-                  icon={<CategoryIcon fontSize="large" />}
-                  loading={loadingStats}
-                  color="#2196f3"
-                />
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <StatsCard
+                    title="Total Stock"
+                    value={inventoryContext.stats?.totalStock || 0}
+                    icon={<CategoryIcon fontSize="large" />}
+                    loading={loadingStats}
+                    color="#2196f3"
+                  />
+                </motion.div>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <StatsCard
-                  title="Low Stock Items"
-                  value={inventoryContext.stats?.lowStockItems || 0}
-                  icon={<WarningIcon fontSize="large" />}
-                  loading={loadingStats}
-                  color="#f44336"
-                />
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <StatsCard
+                    title="Low Stock Items"
+                    value={inventoryContext.stats?.lowStockItems || 0}
+                    icon={<WarningIcon fontSize="large" />}
+                    loading={loadingStats}
+                    color="#f44336"
+                  />
+                </motion.div>
               </Grid>
             </Grid>
 
             <Grid container spacing={3}>
               <Grid item xs={12} md={8}>
-                <Paper sx={{ mb: 4 }}>
-                  <Tabs
-                    value={activeTab}
-                    onChange={handleTabChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    variant="fullWidth"
-                  >
-                    <Tab label="All Products" />
-                    <Tab label="Low Stock" />
-                  </Tabs>
-                  <Box p={3}>
-                    {activeTab === 0 ? (
-                      <StockTable
-                        products={inventoryContext.products || []}
-                        loading={loadingProducts}
-                        onEdit={() => {}}
-                        onAdd={handleOpenAddProductDialog}
-                      />
-                    ) : (
-                      <LowStockAlert
-                        products={lowStockProducts}
-                        loading={loadingProducts}
-                        onCreatePurchaseOrder={() =>
-                          handleNavigateToView("purchaseOrders")
-                        }
-                      />
-                    )}
-                  </Box>
-                </Paper>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  <Paper sx={{ mb: 4 }}>
+                    <Tabs
+                      value={activeTab}
+                      onChange={handleTabChange}
+                      indicatorColor="primary"
+                      textColor="primary"
+                      variant="fullWidth"
+                    >
+                      <Tab label="All Products" />
+                      <Tab label="Low Stock" />
+                    </Tabs>
+                    <Box p={3}>
+                      {activeTab === 0 ? (
+                        <StockTable
+                          products={inventoryContext.products || []}
+                          loading={loadingProducts}
+                          onEdit={() => {}}
+                          onAdd={handleOpenAddProductDialog}
+                        />
+                      ) : (
+                        <LowStockAlert
+                          products={lowStockProducts}
+                          loading={loadingProducts}
+                          onCreatePurchaseOrder={() =>
+                            handleNavigateToView("purchaseOrders")
+                          }
+                        />
+                      )}
+                    </Box>
+                  </Paper>
+                </motion.div>
               </Grid>
 
               <Grid item xs={12} md={4}>
-                <RealTimeInventoryMonitor />
-                <Box mt={3}>
-                  <AutoReorderSettings />
-                </Box>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                >
+                  <RealTimeInventoryMonitor />
+                  <Box mt={3}>
+                    <AutoReorderSettings />
+                  </Box>
+                </motion.div>
               </Grid>
             </Grid>
           </>
@@ -545,191 +681,267 @@ const InventoryManagerDashboard = () => {
   };
 
   return (
-    <DashboardLayout>
-      <Box
-        sx={{
-          mb: 4,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          {viewMode === "dashboard" && "Inventory Dashboard"}
-          {viewMode === "products" && "Product Management"}
-          {viewMode === "suppliers" && "Supplier Management"}
-          {viewMode === "purchaseOrders" && "Purchase Orders"}
-        </Typography>
+    <InteractiveBackground>
+      <DashboardLayout>
+        <Container
+          maxWidth="xl"
+          sx={{
+            mt: 3,
+            mb: 4,
+            backgroundColor: alpha("#0c1e2b", 0.7),
+            backdropFilter: "blur(10px)",
+            borderRadius: 2,
+            padding: 3,
+            boxShadow:
+              "0 8px 32px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 255, 200, 0.1)",
+            color: "#fff",
+            border: "1px solid rgba(0, 200, 150, 0.1)",
+            position: "relative",
+            overflow: "hidden",
+            zIndex: 1,
+          }}
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background:
+                "radial-gradient(circle at top right, rgba(0,200,150,0.1) 0%, transparent 40%)",
+              pointerEvents: "none",
+              zIndex: -1,
+            }}
+          />
 
-        <Box>
-          {viewMode !== "dashboard" && (
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => handleNavigateToView("dashboard")}
-              sx={{ mr: 1 }}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Box sx={{ mb: 4, display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#fff",
+                  textShadow: "0 0 10px rgba(0, 200, 150, 0.5)",
+                  mb: 1,
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <InventoryIcon sx={{ mr: 1, fontSize: 35 }} />
+                {viewMode === "dashboard" && "Inventory Dashboard"}
+                {viewMode === "products" && "Product Management"}
+                {viewMode === "suppliers" && "Supplier Management"}
+                {viewMode === "purchaseOrders" && "Purchase Orders"}
+              </Typography>
+            </Box>
+          </motion.div>
+
+          <Box sx={{ mb: 4 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Back to Dashboard
-            </Button>
-          )}
-
-          {viewMode === "dashboard" && (
-            <>
-              <Typography variant="h2">Inventory Management</Typography>
-              <Box sx={{ display: "flex", gap: 2 }}>
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 1,
+                  borderRadius: 2,
+                  backgroundColor: alpha("#001924", 0.5),
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 1,
+                  justifyContent: "center",
+                  border: "1px solid rgba(0, 200, 150, 0.2)",
+                }}
+              >
                 <Button
-                  variant="contained"
+                  variant={viewMode === "dashboard" ? "contained" : "outlined"}
+                  startIcon={<ChartIcon />}
+                  onClick={() => handleNavigateToView("dashboard")}
                   color="primary"
+                  sx={{
+                    m: 0.5,
+                    borderRadius: 2,
+                    boxShadow:
+                      viewMode === "dashboard"
+                        ? "0 0 15px rgba(0, 200, 150, 0.5)"
+                        : "none",
+                  }}
+                >
+                  Dashboard
+                </Button>
+                <Button
+                  variant={viewMode === "products" ? "contained" : "outlined"}
                   startIcon={<InventoryIcon />}
                   onClick={() => handleNavigateToView("products")}
+                  color="primary"
+                  sx={{
+                    m: 0.5,
+                    borderRadius: 2,
+                    boxShadow:
+                      viewMode === "products"
+                        ? "0 0 15px rgba(0, 200, 150, 0.5)"
+                        : "none",
+                  }}
                 >
                   Products
                 </Button>
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant={viewMode === "suppliers" ? "contained" : "outlined"}
                   startIcon={<SupplierIcon />}
                   onClick={() => handleNavigateToView("suppliers")}
+                  color="primary"
+                  sx={{
+                    m: 0.5,
+                    borderRadius: 2,
+                    boxShadow:
+                      viewMode === "suppliers"
+                        ? "0 0 15px rgba(0, 200, 150, 0.5)"
+                        : "none",
+                  }}
                 >
                   Suppliers
                 </Button>
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant={
+                    viewMode === "purchaseOrders" ? "contained" : "outlined"
+                  }
                   startIcon={<PurchaseOrderIcon />}
                   onClick={() => handleNavigateToView("purchaseOrders")}
+                  color="primary"
+                  sx={{
+                    m: 0.5,
+                    borderRadius: 2,
+                    boxShadow:
+                      viewMode === "purchaseOrders"
+                        ? "0 0 15px rgba(0, 200, 150, 0.5)"
+                        : "none",
+                  }}
                 >
                   Purchase Orders
                 </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<AutorenewIcon />}
-                  onClick={() => {
-                    handleNavigateToView("dashboard");
-                    // Scroll to auto-reorder settings
-                    setTimeout(() => {
-                      const element = document.getElementById(
-                        "auto-reorder-settings"
-                      );
-                      if (element) {
-                        element.scrollIntoView({ behavior: "smooth" });
-                      }
-                    }, 100);
-                  }}
-                >
-                  Auto-Reorder
-                </Button>
-              </Box>
-            </>
-          )}
-        </Box>
-      </Box>
-
-      {renderContent()}
-
-      {/* Add Product Dialog */}
-      <Dialog
-        open={addProductDialogOpen}
-        onClose={handleCloseAddProductDialog}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Add New Product</DialogTitle>
-        <DialogContent>
-          <Box sx={{ mt: 2 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  name="name"
-                  label="Product Name"
-                  value={newProduct.name}
-                  onChange={handleNewProductChange}
-                  fullWidth
-                  required
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="sku"
-                  label="SKU"
-                  value={newProduct.sku}
-                  onChange={handleNewProductChange}
-                  fullWidth
-                  required
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth required>
-                  <InputLabel id="category-label">Category</InputLabel>
-                  <Select
-                    labelId="category-label"
-                    id="category"
-                    name="category"
-                    value={newProduct.category}
-                    label="Category"
-                    onChange={handleNewProductChange}
-                  >
-                    {categories.map((category) => (
-                      <MenuItem key={category} value={category}>
-                        {category}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="price"
-                  label="Price (₹)"
-                  type="number"
-                  value={newProduct.price}
-                  onChange={handleNewProductChange}
-                  fullWidth
-                  required
-                  InputProps={{
-                    startAdornment: (
-                      <Box component="span" mr={0.5}>
-                        ₹
-                      </Box>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="stock"
-                  label="Stock"
-                  type="number"
-                  value={newProduct.stock}
-                  onChange={handleNewProductChange}
-                  fullWidth
-                  required
-                />
-              </Grid>
-            </Grid>
+              </Paper>
+            </motion.div>
           </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseAddProductDialog}>Cancel</Button>
-          <Button
-            onClick={handleAddProduct}
-            variant="contained"
-            color="primary"
-            startIcon={<SaveIcon />}
-            disabled={
-              !newProduct.name ||
-              !newProduct.sku ||
-              !newProduct.category ||
-              !newProduct.price ||
-              !newProduct.stock
-            }
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
           >
-            Add Product
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </DashboardLayout>
+            {renderContent()}
+          </motion.div>
+
+          {/* Add Product Dialog */}
+          <Dialog
+            open={addProductDialogOpen}
+            onClose={handleCloseAddProductDialog}
+            maxWidth="sm"
+            fullWidth
+          >
+            <DialogTitle>Add New Product</DialogTitle>
+            <DialogContent>
+              <Box sx={{ mt: 2 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="name"
+                      label="Product Name"
+                      value={newProduct.name}
+                      onChange={handleNewProductChange}
+                      fullWidth
+                      required
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      name="sku"
+                      label="SKU"
+                      value={newProduct.sku}
+                      onChange={handleNewProductChange}
+                      fullWidth
+                      required
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth required>
+                      <InputLabel id="category-label">Category</InputLabel>
+                      <Select
+                        labelId="category-label"
+                        id="category"
+                        name="category"
+                        value={newProduct.category}
+                        label="Category"
+                        onChange={handleNewProductChange}
+                      >
+                        {categories.map((category) => (
+                          <MenuItem key={category} value={category}>
+                            {category}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      name="price"
+                      label="Price (₹)"
+                      type="number"
+                      value={newProduct.price}
+                      onChange={handleNewProductChange}
+                      fullWidth
+                      required
+                      InputProps={{
+                        startAdornment: (
+                          <Box component="span" mr={0.5}>
+                            ₹
+                          </Box>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      name="stock"
+                      label="Stock"
+                      type="number"
+                      value={newProduct.stock}
+                      onChange={handleNewProductChange}
+                      fullWidth
+                      required
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseAddProductDialog}>Cancel</Button>
+              <Button
+                onClick={handleAddProduct}
+                variant="contained"
+                color="primary"
+                startIcon={<SaveIcon />}
+                disabled={
+                  !newProduct.name ||
+                  !newProduct.sku ||
+                  !newProduct.category ||
+                  !newProduct.price ||
+                  !newProduct.stock
+                }
+              >
+                Add Product
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Container>
+      </DashboardLayout>
+    </InteractiveBackground>
   );
 };
 
