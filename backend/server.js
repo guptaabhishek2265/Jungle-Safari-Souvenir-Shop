@@ -70,7 +70,7 @@ eventEmitter.on("lowStock", (data) => {
 const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
-  // Add your frontend Vercel URL here after deployment
+  // Add your frontend Vercel URL here after frontend deployment
   "https://your-frontend-app.vercel.app"
 ];
 
@@ -115,6 +115,34 @@ app.use("/api/orders", ordersRoutes);
 // Welcome route
 app.get("/", (req, res) => {
   res.send("Welcome to Jungle Safari Inventory Management API");
+});
+
+// Temporary route to create admin user (remove after use)
+app.get("/create-admin", async (req, res) => {
+  try {
+    const User = require("./models/User");
+
+    // Check if admin already exists
+    const existingAdmin = await User.findOne({ email: "abhishek2265@gmail.com" });
+
+    if (existingAdmin) {
+      return res.json({ message: "Admin user already exists" });
+    }
+
+    // Create admin user
+    const adminUser = new User({
+      name: "Abhishek Admin",
+      email: "abhishek2265@gmail.com",
+      password: "654321",
+      role: "admin",
+      phone: "1234567890"
+    });
+
+    await adminUser.save();
+    res.json({ message: "Admin user created successfully!" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Serve static assets in production
