@@ -15,7 +15,19 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://your-frontend-app.vercel.app"
+      ];
+
+      if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -55,8 +67,24 @@ eventEmitter.on("lowStock", (data) => {
 });
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  // Add your frontend Vercel URL here after deployment
+  "https://your-frontend-app.vercel.app"
+];
+
 app.use(cors({
-  origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
