@@ -19,7 +19,7 @@ const io = socketIo(server, {
       const allowedOrigins = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "https://your-frontend-app.vercel.app"
+        "https://jungle-safari-souvenir-shop-o67c.vercel.app"
       ];
 
       if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
@@ -70,8 +70,7 @@ eventEmitter.on("lowStock", (data) => {
 const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
-  // Add your frontend Vercel URL here after frontend deployment
-  "https://your-frontend-app.vercel.app"
+  "https://jungle-safari-souvenir-shop-o67c.vercel.app"
 ];
 
 app.use(cors({
@@ -79,7 +78,22 @@ app.use(cors({
     // Allow requests with no origin (mobile apps, curl, etc.)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+    // Allow localhost for development
+    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      return callback(null, true);
+    }
+
+    // Allow your specific Vercel frontend
+    if (origin === 'https://jungle-safari-souvenir-shop-o67c.vercel.app') {
+      return callback(null, true);
+    }
+
+    // Allow any jungle-safari-souvenir-shop Vercel deployment
+    if (origin.includes('jungle-safari-souvenir-shop') && origin.includes('vercel.app')) {
+      return callback(null, true);
+    }
+
+    if (process.env.NODE_ENV === 'development') {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -115,34 +129,6 @@ app.use("/api/orders", ordersRoutes);
 // Welcome route
 app.get("/", (req, res) => {
   res.send("Welcome to Jungle Safari Inventory Management API");
-});
-
-// Temporary route to create admin user (remove after use)
-app.get("/create-admin", async (req, res) => {
-  try {
-    const User = require("./models/User");
-
-    // Check if admin already exists
-    const existingAdmin = await User.findOne({ email: "abhishek2265@gmail.com" });
-
-    if (existingAdmin) {
-      return res.json({ message: "Admin user already exists" });
-    }
-
-    // Create admin user
-    const adminUser = new User({
-      name: "Abhishek Admin",
-      email: "abhishek2265@gmail.com",
-      password: "654321",
-      role: "admin",
-      phone: "1234567890"
-    });
-
-    await adminUser.save();
-    res.json({ message: "Admin user created successfully!" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
 });
 
 // Serve static assets in production
