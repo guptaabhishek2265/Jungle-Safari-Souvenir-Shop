@@ -11,6 +11,7 @@ import DashboardLayout from "../../components/common/DashboardLayout";
 import StatsCard from "../../components/dashboard/StatsCard";
 import LowStockAlert from "../../components/dashboard/LowStockAlert";
 import PendingOrders from "../../components/dashboard/PendingOrders";
+import SocketTest from "../../components/SocketTest";
 
 const AdminDashboard = () => {
   const [statsLoading, setStatsLoading] = useState(true);
@@ -169,6 +170,11 @@ const AdminDashboard = () => {
             loading={ordersLoading}
             onViewAllClick={handleViewAllOrders}
           />
+        </Grid>
+
+        {/* Socket.IO Test Component */}
+        <Grid item xs={12}>
+          <SocketTest />
         </Grid>
       </Grid>
     </DashboardLayout>
