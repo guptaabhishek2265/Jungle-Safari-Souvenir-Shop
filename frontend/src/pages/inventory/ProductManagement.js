@@ -94,7 +94,7 @@ const ProductManagement = () => {
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
-      const API_URL = "http://localhost:5000/api";
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
       const response = await axios.get(`${API_URL}/products`);
 
@@ -110,7 +110,7 @@ const ProductManagement = () => {
   // Fetch suppliers for the product form
   const fetchSuppliers = useCallback(async () => {
     try {
-      const API_URL = "http://localhost:5000/api";
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
       const response = await axios.get(`${API_URL}/suppliers`);
 
@@ -162,7 +162,7 @@ const ProductManagement = () => {
       };
 
       // Add API_URL prefix to requests
-      const API_URL = "http://localhost:5000/api";
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
       if (editingProduct) {
         // Update existing product
@@ -184,7 +184,7 @@ const ProductManagement = () => {
       console.error("Error saving product:", error);
       showAlert(
         error.response?.data?.message ||
-          "Failed to save product. Please try again.",
+        "Failed to save product. Please try again.",
         "error"
       );
     }
@@ -193,7 +193,7 @@ const ProductManagement = () => {
   // Delete a product
   const handleDeleteProduct = async (productId) => {
     try {
-      const API_URL = "http://localhost:5000/api";
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
       await axios.delete(`${API_URL}/products/${productId}`);
 
@@ -203,7 +203,7 @@ const ProductManagement = () => {
       console.error("Error deleting product:", error);
       showAlert(
         error.response?.data?.message ||
-          "Failed to delete product. Please try again.",
+        "Failed to delete product. Please try again.",
         "error"
       );
     }

@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   // Set up axios defaults
-  const API_URL = "http://localhost:5000/api";
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
   // Setup axios request interceptor to add the token
   useEffect(() => {
